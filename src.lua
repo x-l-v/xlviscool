@@ -24,6 +24,14 @@ local AccentToggle = false
 local AccentColor = Color3.fromRGB(255, 120, 180)
 local DefaultAccentColor = Color3.fromRGB(152, 181, 255)
 local UIAccentColor = AccentToggle and AccentColor or DefaultAccentColor
+local IconAsset = "rbxassetid://74080484918102"
+local IconAnimated = true
+local IconSpriteWidth = 60
+local IconSpriteHeight = 40
+local IconSpriteRows = 2
+local IconSpriteColumns = 3
+local IconSpriteFrames = 5
+local IconSpriteFPS = 10
 
 tablein = tablein or table.insert
 
@@ -415,6 +423,64 @@ function Library.UIAccent(first, second, third)
 	return UpdateUIAccentColor()
 end
 
+function Library.IconAsset(first, second)
+	local asset = ResolveMethodValue(first, second)
+
+	if typeof(asset) == "number" then
+		asset = "rbxassetid://" .. tostring(asset)
+	end
+
+	if typeof(asset) == "string" and asset ~= "" then
+		IconAsset = asset
+		IconAnimated = false
+	end
+
+	return IconAsset
+end
+
+function Library.IconAnimated(first, second)
+	IconAnimated = ResolveMethodValue(first, second) == true
+	return IconAnimated
+end
+
+function Library.IconSprite(first, second, third, fourth, fifth, sixth, seventh, eighth)
+	local asset = first
+	local width = second
+	local height = third
+	local rows = fourth
+	local columns = fifth
+	local frames = sixth
+	local fps = seventh
+
+	if first == Library then
+		asset = second
+		width = third
+		height = fourth
+		rows = fifth
+		columns = sixth
+		frames = seventh
+		fps = eighth
+	end
+
+	if typeof(asset) == "number" then
+		asset = "rbxassetid://" .. tostring(asset)
+	end
+
+	if typeof(asset) == "string" and asset ~= "" then
+		IconAsset = asset
+	end
+
+	IconSpriteWidth = tonumber(width) or IconSpriteWidth
+	IconSpriteHeight = tonumber(height) or IconSpriteHeight
+	IconSpriteRows = tonumber(rows) or IconSpriteRows
+	IconSpriteColumns = tonumber(columns) or IconSpriteColumns
+	IconSpriteFrames = tonumber(frames) or IconSpriteFrames
+	IconSpriteFPS = tonumber(fps) or IconSpriteFPS
+	IconAnimated = true
+
+	return IconAsset
+end
+
 
 function Library.new()
     local self = setmetatable({
@@ -796,7 +862,11 @@ local function AnimateGif(ImageLabel, Width, Height, Rows, Columns, NumberOfFram
     end)
 end
 
-AnimateGif(Icon, 60, 40, 2, 3, 5, "rbxassetid://74080484918102", 10)
+if IconAnimated then
+    AnimateGif(Icon, IconSpriteWidth, IconSpriteHeight, IconSpriteRows, IconSpriteColumns, IconSpriteFrames, IconAsset, IconSpriteFPS)
+else
+    Icon.Image = IconAsset
+end
     
     local Divider = Instance.new('Frame')
     Divider.Name = 'Divider'
