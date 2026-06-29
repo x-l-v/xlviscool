@@ -18,6 +18,12 @@ getgenv().GG = {
     }
 }
 
+local UIName = "Frostware"
+local ConfigFolder = UIName
+local UIAccentColor = Color3.fromRGB(152, 181, 255)
+
+tablein = tablein or table.insert
+
 -- Replace the SelectedLanguage with a reference to GG.Language
 local SelectedLanguage = GG.Language
 
@@ -47,14 +53,14 @@ local CoreGui = cloneref(game:GetService('CoreGui'))
 local Debris = cloneref(game:GetService('Debris'))
 
 local mouse = Players.LocalPlayer:GetMouse()
-local old_Frostware = CoreGui:FindFirstChild('Frostware')
+local old_Frostware = CoreGui:FindFirstChild(UIName)
 
 if old_Frostware then
     Debris:AddItem(old_Frostware, 0)
 end
 
-if not isfolder("Frostware") then
-    makefolder("Frostware")
+if not isfolder(ConfigFolder) then
+    makefolder(ConfigFolder)
 end
 
 
@@ -283,7 +289,7 @@ local Config = setmetatable({
     save = function(self: any, file_name: any, config: any)
         local success_save, result = pcall(function()
             local flags = HttpService:JSONEncode(config)
-            writefile('Frostware/'..file_name..'.json', flags)
+            writefile(ConfigFolder..'/'..file_name..'.json', flags)
         end)
     
         if not success_save then
@@ -292,13 +298,13 @@ local Config = setmetatable({
     end,
     load = function(self: any, file_name: any, config: any)
         local success_load, result = pcall(function()
-            if not isfile('Frostware/'..file_name..'.json') then
+            if not isfile(ConfigFolder..'/'..file_name..'.json') then
                 self:save(file_name, config)
         
                 return
             end
         
-            local flags = readfile('Frostware/'..file_name..'.json')
+            local flags = readfile(ConfigFolder..'/'..file_name..'.json')
         
             if not flags then
                 self:save(file_name, config)
@@ -514,7 +520,7 @@ function Library:remove_table_value(__table: any, table_value: string)
 end
 
 function Library:create_ui()
-    local old_Frostware = CoreGui:FindFirstChild('Frostware')
+    local old_Frostware = CoreGui:FindFirstChild(UIName)
 
     if old_Frostware then
         Debris:AddItem(old_Frostware, 0)
@@ -522,7 +528,7 @@ function Library:create_ui()
 
     local Frostware = Instance.new('ScreenGui')
     Frostware.ResetOnSpawn = false
-    Frostware.Name = 'Frostware'
+    Frostware.Name = UIName
     Frostware.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     Frostware.Parent = CoreGui
     
@@ -544,7 +550,7 @@ function Library:create_ui()
     ContainerGradient.Color = ColorSequence.new{
         ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),    -- Top black
         ColorSequenceKeypoint.new(0.60, Color3.fromRGB(0, 0, 0)),    -- Fade start
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(152, 181, 255)) -- Bottom blue
+        ColorSequenceKeypoint.new(1.00, UIAccentColor) -- Bottom blue
     }
     ContainerGradient.Rotation = 90
     ContainerGradient.Parent = Container
@@ -562,12 +568,14 @@ function Library:create_ui()
     SideGradient.Color = ColorSequence.new{
         ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
         ColorSequenceKeypoint.new(0.60, Color3.fromRGB(0, 0, 0)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(152, 181, 255))
+        ColorSequenceKeypoint.new(1.00, UIAccentColor)
     }
     SideGradient.Rotation = 90
     SideGradient.Parent = SideBar
 
-    -- Center image -- 
+    --[[
+    -- Optional center image overlay.
+    -- Uncomment this block and replace the asset ID if you want a custom image in the window background.
     local CenterImage = Instance.new("ImageLabel")
     CenterImage.Name = "CenterImage"
     CenterImage.Parent = Container
@@ -575,9 +583,11 @@ function Library:create_ui()
     CenterImage.Position = UDim2.new(0.5, 0, 0.5, 0)
     CenterImage.Size = UDim2.new(0, 300, 0, 300)
     CenterImage.BackgroundTransparency = 1
-    CenterImage.Image = "" -- rbxassetid://89379725443857 -- 
+    CenterImage.Image = "rbxassetid://YOUR_IMAGE_ID"
     CenterImage.ScaleType = Enum.ScaleType.Fit
-    CenterImage.ImageColor3 = Color3.fromRGB(152, 181, 255)
+    CenterImage.ImageColor3 = UIAccentColor
+    CenterImage.ImageTransparency = 0
+    ]]
 
     local UICorner = Instance.new('UICorner')
     UICorner.CornerRadius = UDim.new(0, 10)
@@ -620,11 +630,11 @@ function Library:create_ui()
     
     local ClientName = Instance.new('TextLabel')
     ClientName.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-    ClientName.TextColor3 = Color3.fromRGB(152, 181, 255)
+    ClientName.TextColor3 = UIAccentColor
     ClientName.TextTransparency = 0.20000000298023224
-    ClientName.Text = 'Frostware'
+    ClientName.Text = UIName
     ClientName.Name = 'ClientName'
-    ClientName.Size = UDim2.new(0, 31, 0, 13)
+    ClientName.Size = UDim2.new(0, 160, 0, 13)
     ClientName.AnchorPoint = Vector2.new(0, 0.5)
     ClientName.Position = UDim2.new(0.0560000017285347, 0, 0.054999999701976776, 0)
     ClientName.BackgroundTransparency = 1
@@ -648,7 +658,7 @@ function Library:create_ui()
     Pin.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Pin.Size = UDim2.new(0, 2, 0, 16)
     Pin.BorderSizePixel = 0
-    Pin.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+    Pin.BackgroundColor3 = UIAccentColor
     Pin.Parent = Handler
     
     local UICorner2 = Instance.new('UICorner')
@@ -659,7 +669,7 @@ function Library:create_ui()
 local Icon = Instance.new('ImageLabel')
 Icon.Name = 'Icon'
 Icon.Parent = Handler
-Icon.ImageColor3 = Color3.fromRGB(152, 181, 255)
+Icon.ImageColor3 = UIAccentColor
 Icon.ScaleType = Enum.ScaleType.Fit
 Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Icon.AnchorPoint = Vector2.new(0, 0.5)
@@ -879,7 +889,7 @@ AnimateGif(Icon, 60, 40, 2, 3, 5, "rbxassetid://74080484918102", 10)
 
                     TweenService:Create(object.TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                         TextTransparency = 0.2,
-                        TextColor3 = Color3.fromRGB(152, 181, 255)
+                        TextColor3 = UIAccentColor
                     }):Play()
 
                     TweenService:Create(object.TextLabel.UIGradient, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
@@ -888,7 +898,7 @@ AnimateGif(Icon, 60, 40, 2, 3, 5, "rbxassetid://74080484918102", 10)
 
                     TweenService:Create(object.Icon, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                         ImageTransparency = 0.2,
-                        ImageColor3 = Color3.fromRGB(152, 181, 255)
+                        ImageColor3 = UIAccentColor
                     }):Play()
                 end
 
@@ -1116,13 +1126,13 @@ function TabManager:moduleparagraph(settings: any)
 
     local ModuleName = Instance.new('TextLabel')
     ModuleName.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-    ModuleName.TextColor3 = Color3.fromRGB(152, 181, 255)
+    ModuleName.TextColor3 = UIAccentColor
     ModuleName.TextTransparency = 0.20000000298023224
     if not settings.rich then
         ModuleName.Text = settings.title or "Paragraph Title"
     else
         ModuleName.RichText = true
-        ModuleName.Text = settings.richtext or "<font color='rgb(255,0,0)'>Frostware</font> Info"
+        ModuleName.Text = settings.richtext or "<font color='rgb(255,0,0)'>" .. UIName .. "</font> Info"
     end
     ModuleName.Name = 'ModuleName'
     ModuleName.Size = UDim2.new(0, 205, 0, 13)
@@ -1138,7 +1148,7 @@ function TabManager:moduleparagraph(settings: any)
     
     local Description = Instance.new('TextLabel')
     Description.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-    Description.TextColor3 = Color3.fromRGB(152, 181, 255)
+    Description.TextColor3 = UIAccentColor
     Description.TextTransparency = 0.699999988079071
     Description.Text = settings.description or "This is a description paragraph."
     Description.Name = 'Description'
@@ -1257,7 +1267,7 @@ end
             Header.Parent = Module
             
             local Icon = Instance.new('ImageLabel')
-            Icon.ImageColor3 = Color3.fromRGB(152, 181, 255)
+            Icon.ImageColor3 = UIAccentColor
             Icon.ScaleType = Enum.ScaleType.Fit
             Icon.ImageTransparency = 0.699999988079071
             Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -1273,13 +1283,13 @@ end
             
             local ModuleName = Instance.new('TextLabel')
             ModuleName.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-            ModuleName.TextColor3 = Color3.fromRGB(152, 181, 255)
+            ModuleName.TextColor3 = UIAccentColor
             ModuleName.TextTransparency = 0.20000000298023224
             if not settings.rich then
                 ModuleName.Text = settings.title or "Skibidi"
             else
                 ModuleName.RichText = true
-                ModuleName.Text = settings.richtext or "<font color='rgb(255,0,0)'>Frostware</font> user"
+                ModuleName.Text = settings.richtext or "<font color='rgb(255,0,0)'>" .. UIName .. "</font> user"
             end;
             ModuleName.Name = 'ModuleName'
             ModuleName.Size = UDim2.new(0, 205, 0, 13)
@@ -1295,7 +1305,7 @@ end
             
             local Description = Instance.new('TextLabel')
             Description.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-            Description.TextColor3 = Color3.fromRGB(152, 181, 255)
+            Description.TextColor3 = UIAccentColor
             Description.TextTransparency = 0.699999988079071
             Description.Text = settings.description
             Description.Name = 'Description'
@@ -1346,7 +1356,7 @@ end
             Keybind.BorderColor3 = Color3.fromRGB(0, 0, 0)
             Keybind.Size = UDim2.new(0, 33, 0, 15)
             Keybind.BorderSizePixel = 0
-            Keybind.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+            Keybind.BackgroundColor3 = UIAccentColor
             Keybind.Parent = Header
             
             local UICorner = Instance.new('UICorner')
@@ -1419,11 +1429,11 @@ end
                     }):Play()
 
                     TweenService:Create(Toggle, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                        BackgroundColor3 = UIAccentColor
                     }):Play()
 
                     TweenService:Create(Circle, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundColor3 = Color3.fromRGB(152, 181, 255),
+                        BackgroundColor3 = UIAccentColor,
                         Position = UDim2.fromScale(0.53, 0.5)
                     }):Play()
                 else
@@ -1489,8 +1499,8 @@ end
                 ModuleManager._state = true
                 settings.callback(ModuleManager._state)
 
-                Toggle.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
-                Circle.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                Toggle.BackgroundColor3 = UIAccentColor
+                Circle.BackgroundColor3 = UIAccentColor
                 Circle.Position = UDim2.fromScale(0.53, 0.5)
             end
 
@@ -1627,7 +1637,7 @@ end
                     Body.Text = settings.text or "Skibidi"
                 else
                     Body.RichText = true
-                    Body.Text = settings.richtext or "<font color='rgb(255,0,0)'>Frostware</font> user"
+                    Body.Text = settings.richtext or "<font color='rgb(255,0,0)'>" .. UIName .. "</font> user"
                 end
                 
                 Body.Size = UDim2.new(1, -10, 0, 20)
@@ -1697,7 +1707,7 @@ end
                     Body.Text = settings.text or "Skibidi" -- Default text
                 else
                     Body.RichText = true
-                    Body.Text = settings.richtext or "<font color='rgb(255,0,0)'>Frostware</font> user" -- Default rich text
+                    Body.Text = settings.richtext or "<font color='rgb(255,0,0)'>" .. UIName .. "</font> user" -- Default rich text
                 end
             
                 Body.Size = UDim2.new(1, -10, 1, 0)
@@ -1728,7 +1738,7 @@ end
                         Body.Text = new_settings.text or "Skibidi" -- Default text
                     else
                         Body.RichText = true
-                        Body.Text = new_settings.richtext or "<font color='rgb(255,0,0)'>Frostware</font> user" -- Default rich text
+                        Body.Text = new_settings.richtext or "<font color='rgb(255,0,0)'>" .. UIName .. "</font> user" -- Default rich text
                     end
                 end;
             
@@ -1778,7 +1788,7 @@ end
                 Textbox.Size = UDim2.new(0, 207, 0, 15)
                 Textbox.BorderSizePixel = 0
                 Textbox.TextSize = 10
-                Textbox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                Textbox.BackgroundColor3 = UIAccentColor
                 Textbox.BackgroundTransparency = 0.9
                 Textbox.ClearTextOnFocus = false
                 Textbox.Parent = Options
@@ -1859,7 +1869,7 @@ end
                 KeybindBox.Size = UDim2.fromOffset(14, 14)
                 KeybindBox.Position = UDim2.new(1, -35, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(0, 0.5)
-                KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                KeybindBox.BackgroundColor3 = UIAccentColor
                 KeybindBox.BorderSizePixel = 0
                 KeybindBox.Parent = Checkbox
             
@@ -1888,7 +1898,7 @@ end
                 Box.Name = "Box"
                 Box.Size = UDim2.new(0, 15, 0, 15)
                 Box.BorderSizePixel = 0
-                Box.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                Box.BackgroundColor3 = UIAccentColor
                 Box.Parent = Checkbox
             
                 local BoxCorner = Instance.new("UICorner")
@@ -1902,7 +1912,7 @@ end
                 Fill.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Fill.Name = "Fill"
                 Fill.BorderSizePixel = 0
-                Fill.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                Fill.BackgroundColor3 = UIAccentColor
                 Fill.Parent = Box
             
                 local FillCorner = Instance.new("UICorner")
@@ -2179,7 +2189,7 @@ end
                 Drag.Name = 'Drag'
                 Drag.Size = UDim2.new(0, 207, 0, 4)
                 Drag.BorderSizePixel = 0
-                Drag.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                Drag.BackgroundColor3 = UIAccentColor
                 Drag.Parent = Slider
                 
                 local UICorner = Instance.new('UICorner')
@@ -2194,7 +2204,7 @@ end
                 Fill.Name = 'Fill'
                 Fill.Size = UDim2.new(0, 103, 0, 4)
                 Fill.BorderSizePixel = 0
-                Fill.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                Fill.BackgroundColor3 = UIAccentColor
                 Fill.Parent = Drag
                 
                 local UICorner = Instance.new('UICorner')
@@ -2387,7 +2397,7 @@ end
                 Box.Name = 'Box'
                 Box.Size = UDim2.new(0, 207, 0, 22)
                 Box.BorderSizePixel = 0
-                Box.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                Box.BackgroundColor3 = UIAccentColor
                 Box.Parent = TextLabel
                 
                 local UICorner = Instance.new('UICorner')
@@ -2766,7 +2776,7 @@ end
                 local KeybindBox = Instance.new("TextLabel")
                 KeybindBox.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
                 KeybindBox.Size = UDim2.new(0, 15, 0, 15)
-                KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                KeybindBox.BackgroundColor3 = UIAccentColor
                 KeybindBox.TextColor3 = Color3.fromRGB(255, 255, 255)
                 KeybindBox.TextSize = 11
                 KeybindBox.BackgroundTransparency = 1
@@ -2783,7 +2793,7 @@ end
                 CheckboxCorner.CornerRadius = UDim.new(0, 3)
 
                 local UIStroke = Instance.new("UIStroke", KeybindBox)
-                UIStroke.Color = Color3.fromRGB(152, 181, 255)
+                UIStroke.Color = UIAccentColor
                 UIStroke.Thickness = 1
                 UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
             
@@ -2810,13 +2820,13 @@ end
                 if not settings.disablecheck then
                     local Checkbox = Instance.new("TextButton")
                     Checkbox.Size = UDim2.new(0, 15, 0, 15)
-                    Checkbox.BackgroundColor3 = checked and Color3.fromRGB(152, 181, 255) or Color3.fromRGB(32, 38, 51)
+                    Checkbox.BackgroundColor3 = checked and UIAccentColor or Color3.fromRGB(32, 38, 51)
                     Checkbox.Text = ""
                     Checkbox.Parent = RightContainer
                     Checkbox.LayoutOrder = 1;
 
                     local UIStroke = Instance.new("UIStroke", Checkbox)
-                    UIStroke.Color = Color3.fromRGB(152, 181, 255)
+                    UIStroke.Color = UIAccentColor
                     UIStroke.Thickness = 1
                     UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
                 
@@ -2826,7 +2836,7 @@ end
             
                     local function toggleState()
                         checked = not checked
-                        Checkbox.BackgroundColor3 = checked and Color3.fromRGB(152, 181, 255) or Color3.fromRGB(32, 38, 51)
+                        Checkbox.BackgroundColor3 = checked and UIAccentColor or Color3.fromRGB(32, 38, 51)
                         Library._config._flags[settings.flag].checked = checked
                         Config:save(game.GameId, Library._config)
                         if settings.callback then
