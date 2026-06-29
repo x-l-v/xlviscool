@@ -352,6 +352,69 @@ local Library = {
 }
 Library.__index = Library
 
+local function ResolveMethodValue(first, second)
+	if first == Library then
+		return second
+	end
+
+	return first
+end
+
+local function UpdateUIAccentColor()
+	UIAccentColor = AccentToggle and AccentColor or DefaultAccentColor
+	return UIAccentColor
+end
+
+function Library.UIName(first, second)
+	local name = ResolveMethodValue(first, second)
+
+	if typeof(name) == "string" and name ~= "" then
+		UIName = name
+		ConfigFolder = name
+
+		if type(isfolder) == "function" and type(makefolder) == "function" and not isfolder(ConfigFolder) then
+			makefolder(ConfigFolder)
+		end
+
+		Library._config = Config:load(game.GameId)
+	end
+
+	return UIName
+end
+
+function Library.AccentToggle(first, second)
+	AccentToggle = ResolveMethodValue(first, second) == true
+	return UpdateUIAccentColor()
+end
+
+function Library.AccentColor(first, second)
+	local color = ResolveMethodValue(first, second)
+
+	if typeof(color) == "Color3" then
+		AccentColor = color
+	end
+
+	return UpdateUIAccentColor()
+end
+
+function Library.UIAccent(first, second, third)
+	local enabled = first
+	local color = second
+
+	if first == Library then
+		enabled = second
+		color = third
+	end
+
+	AccentToggle = enabled == true
+
+	if typeof(color) == "Color3" then
+		AccentColor = color
+	end
+
+	return UpdateUIAccentColor()
+end
+
 
 function Library.new()
     local self = setmetatable({
