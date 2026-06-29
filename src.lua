@@ -20,7 +20,10 @@ getgenv().GG = {
 
 local UIName = "Frostware"
 local ConfigFolder = UIName
-local UIAccentColor = Color3.fromRGB(152, 181, 255)
+local AccentToggle = false
+local AccentColor = Color3.fromRGB(255, 120, 180)
+local DefaultAccentColor = Color3.fromRGB(152, 181, 255)
+local UIAccentColor = AccentToggle and AccentColor or DefaultAccentColor
 
 tablein = tablein or table.insert
 
