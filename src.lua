@@ -699,20 +699,19 @@ function Library:create_ui()
     Container.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Container.AnchorPoint = Vector2.new(0.5, 0.5)
     Container.Name = 'Container'
-    Container.BackgroundTransparency = 0.15 -- must be 0 for gradient fill to show
-    Container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Container.BackgroundTransparency = 0.04
+    Container.BackgroundColor3 = Color3.fromRGB(7, 7, 8)
     Container.Position = UDim2.new(0.5, 0, 0.5, 0)
     Container.Size = UDim2.new(0, 0, 0, 0)
     Container.Active = true
     Container.BorderSizePixel = 0
     Container.Parent = Frostware
 
-    -- Gradient fill for Container (inverted colors)
     local ContainerGradient = Instance.new("UIGradient")
     ContainerGradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),    -- Top black
-        ColorSequenceKeypoint.new(0.60, Color3.fromRGB(0, 0, 0)),    -- Fade start
-        ColorSequenceKeypoint.new(1.00, UIAccentColor) -- Bottom blue
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(27, 27, 28)),
+        ColorSequenceKeypoint.new(0.10, Color3.fromRGB(13, 13, 14)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(5, 5, 6))
     }
     ContainerGradient.Rotation = 90
     ContainerGradient.Parent = Container
@@ -721,16 +720,17 @@ function Library:create_ui()
     local SideBar = Instance.new("Frame")
     SideBar.Name = "GradientSide"
     SideBar.Parent = Container
-    SideBar.Size = UDim2.new(0, 10, 1, 0)
+    SideBar.Size = UDim2.new(0, 152, 1, 0)
     SideBar.Position = UDim2.new(0, 0, 0, 0)
-    SideBar.BackgroundTransparency = 1
+    SideBar.BackgroundTransparency = 0.45
+    SideBar.BackgroundColor3 = Color3.fromRGB(5, 5, 6)
 
     -- Side gradient (inverted colors)
     local SideGradient = Instance.new("UIGradient")
     SideGradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
-        ColorSequenceKeypoint.new(0.60, Color3.fromRGB(0, 0, 0)),
-        ColorSequenceKeypoint.new(1.00, UIAccentColor)
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(13, 13, 14)),
+        ColorSequenceKeypoint.new(0.72, Color3.fromRGB(6, 6, 7)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(4, 4, 5))
     }
     SideGradient.Rotation = 90
     SideGradient.Parent = SideBar
@@ -745,15 +745,15 @@ function Library:create_ui()
     CenterImage.Image = "rbxassetid://YOUR_IMAGE_ID"
     CenterImage.ScaleType = Enum.ScaleType.Fit
     CenterImage.ImageColor3 = UIAccentColor
-    CenterImage.ImageTransparency = 0
+    CenterImage.ImageTransparency = 1
 
     local UICorner = Instance.new('UICorner')
-    UICorner.CornerRadius = UDim.new(0, 10)
+    UICorner.CornerRadius = UDim.new(0, 8)
     UICorner.Parent = Container
     
     local UIStroke = Instance.new('UIStroke')
-    UIStroke.Color = Color3.fromRGB(52, 66, 89)
-    UIStroke.Transparency = 0.5
+    UIStroke.Color = Color3.fromRGB(42, 42, 45)
+    UIStroke.Transparency = 0.15
     UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     UIStroke.Parent = Container
     
@@ -761,7 +761,7 @@ function Library:create_ui()
     Handler.BackgroundTransparency = 1
     Handler.Name = 'Handler'
     Handler.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Handler.Size = UDim2.new(0, 698, 0, 479)
+    Handler.Size = UDim2.new(0, 748, 0, 480)
     Handler.BorderSizePixel = 0
     Handler.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Handler.Parent = Container
@@ -770,11 +770,11 @@ function Library:create_ui()
     Tabs.ScrollBarImageTransparency = 1
     Tabs.ScrollBarThickness = 0
     Tabs.Name = 'Tabs'
-    Tabs.Size = UDim2.new(0, 129, 0, 401)
+    Tabs.Size = UDim2.new(0, 138, 0, 395)
     Tabs.Selectable = false
     Tabs.AutomaticCanvasSize = Enum.AutomaticSize.XY
     Tabs.BackgroundTransparency = 1
-    Tabs.Position = UDim2.new(0.026097271591424942, 0, 0.1111111119389534, 0)
+    Tabs.Position = UDim2.new(0, 18, 0, 64)
     Tabs.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Tabs.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Tabs.BorderSizePixel = 0
@@ -788,13 +788,13 @@ function Library:create_ui()
     
     local ClientName = Instance.new('TextLabel')
     ClientName.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-    ClientName.TextColor3 = UIAccentColor
-    ClientName.TextTransparency = 0.20000000298023224
+    ClientName.TextColor3 = Color3.fromRGB(245, 245, 247)
+    ClientName.TextTransparency = 0
     ClientName.Text = UIName
     ClientName.Name = 'ClientName'
     ClientName.Size = UDim2.new(0, 160, 0, 13)
     ClientName.AnchorPoint = Vector2.new(0, 0.5)
-    ClientName.Position = UDim2.new(0.0560000017285347, 0, 0.054999999701976776, 0)
+    ClientName.Position = UDim2.new(0, 45, 0, 24)
     ClientName.BackgroundTransparency = 1
     ClientName.TextXAlignment = Enum.TextXAlignment.Left
     ClientName.BorderSizePixel = 0
@@ -812,9 +812,9 @@ function Library:create_ui()
     
     local Pin = Instance.new('Frame')
     Pin.Name = 'Pin'
-    Pin.Position = UDim2.new(0.026000000536441803, 0, 0.13600000739097595, 0)
+    Pin.Position = UDim2.new(0, 18, 0, 72)
     Pin.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Pin.Size = UDim2.new(0, 2, 0, 16)
+    Pin.Size = UDim2.new(0, 3, 0, 18)
     Pin.BorderSizePixel = 0
     Pin.BackgroundColor3 = UIAccentColor
     Pin.Parent = Handler
@@ -832,7 +832,7 @@ Icon.ScaleType = Enum.ScaleType.Fit
 Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Icon.AnchorPoint = Vector2.new(0, 0.5)
 Icon.BackgroundTransparency = 1
-Icon.Position = UDim2.new(0.025, 0, 0.055, 0)
+Icon.Position = UDim2.new(0, 20, 0, 24)
 Icon.Size = UDim2.new(0, 18, 0, 18)
 Icon.BorderSizePixel = 0
 Icon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -896,12 +896,12 @@ end
     
     local Divider = Instance.new('Frame')
     Divider.Name = 'Divider'
-    Divider.BackgroundTransparency = 0.5
-    Divider.Position = UDim2.new(0.23499999940395355, 0, 0, 0)
+    Divider.BackgroundTransparency = 0.25
+    Divider.Position = UDim2.new(0, 152, 0, 64)
     Divider.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Divider.Size = UDim2.new(0, 1, 0, 479)
+    Divider.Size = UDim2.new(0, 1, 0, 388)
     Divider.BorderSizePixel = 0
-    Divider.BackgroundColor3 = Color3.fromRGB(52, 66, 89)
+    Divider.BackgroundColor3 = Color3.fromRGB(46, 46, 49)
     Divider.Parent = Handler
     
     local Sections = Instance.new('Folder')
@@ -922,6 +922,17 @@ end
     Minimize.TextSize = 14
     Minimize.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Minimize.Parent = Handler
+
+    local SearchIcon = Instance.new('ImageLabel')
+    SearchIcon.Name = 'SearchIcon'
+    SearchIcon.BackgroundTransparency = 1
+    SearchIcon.Position = UDim2.new(1, -38, 0, 18)
+    SearchIcon.Size = UDim2.fromOffset(18, 18)
+    SearchIcon.Image = 'rbxassetid://10734943674'
+    SearchIcon.ImageColor3 = Color3.fromRGB(185, 185, 190)
+    SearchIcon.ImageTransparency = 0.1
+    SearchIcon.ScaleType = Enum.ScaleType.Fit
+    SearchIcon.Parent = Handler
     
     local UIScale = Instance.new('UIScale')
     UIScale.Parent = Container    
@@ -989,7 +1000,7 @@ end
     function self:change_visiblity(state: boolean)
         if state then
             TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                Size = UDim2.fromOffset(698, 479)
+                Size = UDim2.fromOffset(748, 480)
             }):Play()
         else
             TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
@@ -1024,7 +1035,7 @@ end
         end
     
         TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            Size = UDim2.fromOffset(698, 479)
+            Size = UDim2.fromOffset(748, 480)
         }):Play()
 
         AcrylicBlur.new(Container)
@@ -1039,10 +1050,10 @@ end
 
             if object == tab then
                 if object.BackgroundTransparency ~= 0.5 then
-                    local offset = object.LayoutOrder * (0.113 / 1.3)
+                    local offset = object.LayoutOrder * 42
 
                     TweenService:Create(Pin, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        Position = UDim2.fromScale(0.026, 0.135 + offset)
+                        Position = UDim2.new(0, 18, 0, 72 + offset)
                     }):Play()    
 
                     TweenService:Create(object, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
@@ -1050,8 +1061,8 @@ end
                     }):Play()
 
                     TweenService:Create(object.TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        TextTransparency = 0.2,
-                        TextColor3 = UIAccentColor
+                        TextTransparency = 0,
+                        TextColor3 = Color3.fromRGB(255, 255, 255)
                     }):Play()
 
                     TweenService:Create(object.TextLabel.UIGradient, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
@@ -1059,7 +1070,7 @@ end
                     }):Play()
 
                     TweenService:Create(object.Icon, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        ImageTransparency = 0.2,
+                        ImageTransparency = 0,
                         ImageColor3 = UIAccentColor
                     }):Play()
                 end
@@ -1073,8 +1084,8 @@ end
                 }):Play()
                 
                 TweenService:Create(object.TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                    TextTransparency = 0.7,
-                    TextColor3 = Color3.fromRGB(255, 255, 255)
+                    TextTransparency = 0.45,
+                    TextColor3 = Color3.fromRGB(170, 170, 176)
                 }):Play()
 
                 TweenService:Create(object.TextLabel.UIGradient, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
@@ -1082,8 +1093,8 @@ end
                 }):Play()
 
                 TweenService:Create(object.Icon, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                    ImageTransparency = 0.8,
-                    ImageColor3 = Color3.fromRGB(255, 255, 255)
+                    ImageTransparency = 0.45,
+                    ImageColor3 = Color3.fromRGB(170, 170, 176)
                 }):Play()
             end
         end
@@ -1102,7 +1113,7 @@ end
     end
 
     function self:create_tab(title: string, icon: string)
-        icon = ResolveAssetId(icon) or IconAsset
+        icon = ResolveAssetId(icon)
         local TabManager = {}
 
         local LayoutOrder = 0;
@@ -1124,25 +1135,25 @@ end
         Tab.AutoButtonColor = false
         Tab.BackgroundTransparency = 1
         Tab.Name = 'Tab'
-        Tab.Size = UDim2.new(0, 129, 0, 38)
+        Tab.Size = UDim2.new(0, 126, 0, 38)
         Tab.BorderSizePixel = 0
         Tab.TextSize = 14
-        Tab.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
+        Tab.BackgroundColor3 = Color3.fromRGB(18, 18, 20)
         Tab.Parent = Tabs
         Tab.LayoutOrder = self._tab
         
         local UICorner = Instance.new('UICorner')
-        UICorner.CornerRadius = UDim.new(0, 5)
+        UICorner.CornerRadius = UDim.new(0, 6)
         UICorner.Parent = Tab
         
         local TextLabel = Instance.new('TextLabel')
         TextLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-        TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-        TextLabel.TextTransparency = 0.7 -- 0.800000011920929
+        TextLabel.TextColor3 = Color3.fromRGB(170, 170, 176)
+        TextLabel.TextTransparency = 0.45
         TextLabel.Text = title
         TextLabel.Size = UDim2.new(0, font_size.X, 0, 16)
         TextLabel.AnchorPoint = Vector2.new(0, 0.5)
-        TextLabel.Position = UDim2.new(0.2400001734495163, 0, 0.5, 0)
+        TextLabel.Position = UDim2.new(0, 36, 0.5, 0)
         TextLabel.BackgroundTransparency = 1
         TextLabel.TextXAlignment = Enum.TextXAlignment.Left
         TextLabel.BorderSizePixel = 0
@@ -1161,13 +1172,13 @@ end
         
         local Icon = Instance.new('ImageLabel')
         Icon.ScaleType = Enum.ScaleType.Fit
-        Icon.ImageTransparency = 0.800000011920929
+        Icon.ImageTransparency = 0.45
         Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
         Icon.AnchorPoint = Vector2.new(0, 0.5)
         Icon.BackgroundTransparency = 1
-        Icon.Position = UDim2.new(0.10000000149011612, 0, 0.5, 0)
+        Icon.Position = UDim2.new(0, 14, 0.5, 0)
         Icon.Name = 'Icon'
-        Icon.Image = icon
+        Icon.Image = icon or ""
         Icon.Size = UDim2.new(0, 12, 0, 12)
         Icon.BorderSizePixel = 0
         Icon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -1177,12 +1188,12 @@ end
         LeftSection.Name = 'LeftSection'
         LeftSection.AutomaticCanvasSize = Enum.AutomaticSize.XY
         LeftSection.ScrollBarThickness = 0
-        LeftSection.Size = UDim2.new(0, 243, 0, 445)
+        LeftSection.Size = UDim2.new(0, 238, 0, 375)
         LeftSection.Selectable = false
         LeftSection.AnchorPoint = Vector2.new(0, 0.5)
         LeftSection.ScrollBarImageTransparency = 1
         LeftSection.BackgroundTransparency = 1
-        LeftSection.Position = UDim2.new(0.2594326436519623, 0, 0.5, 0)
+        LeftSection.Position = UDim2.new(0, 184, 0, 86)
         LeftSection.BorderColor3 = Color3.fromRGB(0, 0, 0)
         LeftSection.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         LeftSection.BorderSizePixel = 0
@@ -1204,12 +1215,12 @@ end
         RightSection.Name = 'RightSection'
         RightSection.AutomaticCanvasSize = Enum.AutomaticSize.XY
         RightSection.ScrollBarThickness = 0
-        RightSection.Size = UDim2.new(0, 243, 0, 445)
+        RightSection.Size = UDim2.new(0, 238, 0, 375)
         RightSection.Selectable = false
         RightSection.AnchorPoint = Vector2.new(0, 0.5)
         RightSection.ScrollBarImageTransparency = 1
         RightSection.BackgroundTransparency = 1
-        RightSection.Position = UDim2.new(0.6290000081062317, 0, 0.5, 0)
+        RightSection.Position = UDim2.new(0, 464, 0, 86)
         RightSection.BorderColor3 = Color3.fromRGB(0, 0, 0)
         RightSection.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         RightSection.BorderSizePixel = 0
@@ -1257,12 +1268,12 @@ function TabManager:moduleparagraph(settings: any)
     local Module = Instance.new('Frame')
     Module.ClipsDescendants = true
     Module.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Module.BackgroundTransparency = 0.5
+    Module.BackgroundTransparency = 0.08
     Module.Position = UDim2.new(0.004115226212888956, 0, 0, 0)
     Module.Name = 'ModuleParagraph'
     Module.Size = UDim2.new(0, 241, 0, 70)
     Module.BorderSizePixel = 0
-    Module.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
+    Module.BackgroundColor3 = Color3.fromRGB(12, 12, 13)
     Module.Parent = settings.section
 
     local UIListLayout = Instance.new('UIListLayout')
@@ -1270,12 +1281,12 @@ function TabManager:moduleparagraph(settings: any)
     UIListLayout.Parent = Module
     
     local UICorner = Instance.new('UICorner')
-    UICorner.CornerRadius = UDim.new(0, 5)
+    UICorner.CornerRadius = UDim.new(0, 6)
     UICorner.Parent = Module
     
     local UIStroke = Instance.new('UIStroke')
-    UIStroke.Color = Color3.fromRGB(52, 66, 89)
-    UIStroke.Transparency = 0.5
+    UIStroke.Color = Color3.fromRGB(48, 48, 52)
+    UIStroke.Transparency = 0.18
     UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     UIStroke.Parent = Module
     
@@ -1342,21 +1353,21 @@ function TabManager:create_image(settings: any)
     local Module = Instance.new('Frame')
     Module.ClipsDescendants = true
     Module.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Module.BackgroundTransparency = 0.5
+    Module.BackgroundTransparency = 0.08
     Module.Position = UDim2.new(0.004, 0, 0, 0)
     Module.Name = 'ImageModule'
     Module.Size = UDim2.new(0, 241, 0, 140) 
     Module.BorderSizePixel = 0
-    Module.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
+    Module.BackgroundColor3 = Color3.fromRGB(12, 12, 13)
     Module.Parent = settings.section
 
     local UICorner = Instance.new('UICorner')
-    UICorner.CornerRadius = UDim.new(0, 5)
+    UICorner.CornerRadius = UDim.new(0, 6)
     UICorner.Parent = Module
     
     local UIStroke = Instance.new('UIStroke')
-    UIStroke.Color = Color3.fromRGB(52, 66, 89)
-    UIStroke.Transparency = 0.5
+    UIStroke.Color = Color3.fromRGB(48, 48, 52)
+    UIStroke.Transparency = 0.18
     UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     UIStroke.Parent = Module
     
@@ -1393,12 +1404,12 @@ end
             local Module = Instance.new('Frame')
             Module.ClipsDescendants = true
             Module.BorderColor3 = Color3.fromRGB(0, 0, 0)
-            Module.BackgroundTransparency = 0.5
+            Module.BackgroundTransparency = 0.08
             Module.Position = UDim2.new(0.004115226212888956, 0, 0, 0)
             Module.Name = 'Module'
             Module.Size = UDim2.new(0, 241, 0, 93)
             Module.BorderSizePixel = 0
-            Module.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
+            Module.BackgroundColor3 = Color3.fromRGB(12, 12, 13)
             Module.Parent = settings.section
 
             local UIListLayout = Instance.new('UIListLayout')
@@ -1406,12 +1417,12 @@ end
             UIListLayout.Parent = Module
             
             local UICorner = Instance.new('UICorner')
-            UICorner.CornerRadius = UDim.new(0, 5)
+            UICorner.CornerRadius = UDim.new(0, 6)
             UICorner.Parent = Module
             
             local UIStroke = Instance.new('UIStroke')
-            UIStroke.Color = Color3.fromRGB(52, 66, 89)
-            UIStroke.Transparency = 0.5
+            UIStroke.Color = Color3.fromRGB(48, 48, 52)
+            UIStroke.Transparency = 0.18
             UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
             UIStroke.Parent = Module
             
