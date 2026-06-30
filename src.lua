@@ -298,6 +298,10 @@ end
 
 local Config = setmetatable({
     save = function(self: any, file_name: any, config: any)
+        if type(writefile) ~= "function" then
+            return
+        end
+
         local success_save, result = pcall(function()
             local flags = HttpService:JSONEncode(config)
             writefile(ConfigFolder..'/'..file_name..'.json', flags)
@@ -309,6 +313,12 @@ local Config = setmetatable({
     end,
     load = function(self: any, file_name: any, config: any)
         local success_load, result = pcall(function()
+            if type(isfile) ~= "function" or type(readfile) ~= "function" then
+                self:save(file_name, config)
+
+                return
+            end
+
             if not isfile(ConfigFolder..'/'..file_name..'.json') then
                 self:save(file_name, config)
         
@@ -723,7 +733,7 @@ function Library:create_ui()
     Container.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Container.AnchorPoint = Vector2.new(0.5, 0.5)
     Container.Name = 'Container'
-    Container.BackgroundTransparency = 0.04
+    Container.BackgroundTransparency = 0.01
     Container.BackgroundColor3 = Color3.fromRGB(7, 7, 8)
     Container.Position = UDim2.new(0.5, 0, 0.5, 0)
     Container.Size = UDim2.new(0, 0, 0, 0)
@@ -785,7 +795,7 @@ function Library:create_ui()
     Handler.BackgroundTransparency = 1
     Handler.Name = 'Handler'
     Handler.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Handler.Size = UDim2.new(0, 748, 0, 480)
+    Handler.Size = UDim2.new(0, 720, 0, 480)
     Handler.BorderSizePixel = 0
     Handler.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Handler.Parent = Container
@@ -950,7 +960,7 @@ end
     local SearchIcon = Instance.new('ImageLabel')
     SearchIcon.Name = 'SearchIcon'
     SearchIcon.BackgroundTransparency = 1
-    SearchIcon.Position = UDim2.new(1, -38, 0, 18)
+    SearchIcon.Position = UDim2.new(1, -34, 0, 18)
     SearchIcon.Size = UDim2.fromOffset(18, 18)
     SearchIcon.Image = 'rbxassetid://10734943674'
     SearchIcon.ImageColor3 = Color3.fromRGB(185, 185, 190)
@@ -1024,7 +1034,7 @@ end
     function self:change_visiblity(state: boolean)
         if state then
             TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                Size = UDim2.fromOffset(748, 480)
+                Size = UDim2.fromOffset(720, 480)
             }):Play()
         else
             TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
@@ -1059,7 +1069,7 @@ end
         end
     
         TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            Size = UDim2.fromOffset(748, 480)
+            Size = UDim2.fromOffset(720, 480)
         }):Play()
 
         AcrylicBlur.new(Container)
@@ -1212,12 +1222,12 @@ end
         LeftSection.Name = 'LeftSection'
         LeftSection.AutomaticCanvasSize = Enum.AutomaticSize.XY
         LeftSection.ScrollBarThickness = 0
-        LeftSection.Size = UDim2.new(0, 238, 0, 375)
+        LeftSection.Size = UDim2.new(0, 238, 0, 384)
         LeftSection.Selectable = false
-        LeftSection.AnchorPoint = Vector2.new(0, 0.5)
+        LeftSection.AnchorPoint = Vector2.new(0, 0)
         LeftSection.ScrollBarImageTransparency = 1
         LeftSection.BackgroundTransparency = 1
-        LeftSection.Position = UDim2.new(0, 184, 0, 86)
+        LeftSection.Position = UDim2.new(0, 176, 0, 76)
         LeftSection.BorderColor3 = Color3.fromRGB(0, 0, 0)
         LeftSection.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         LeftSection.BorderSizePixel = 0
@@ -1239,12 +1249,12 @@ end
         RightSection.Name = 'RightSection'
         RightSection.AutomaticCanvasSize = Enum.AutomaticSize.XY
         RightSection.ScrollBarThickness = 0
-        RightSection.Size = UDim2.new(0, 238, 0, 375)
+        RightSection.Size = UDim2.new(0, 238, 0, 384)
         RightSection.Selectable = false
-        RightSection.AnchorPoint = Vector2.new(0, 0.5)
+        RightSection.AnchorPoint = Vector2.new(0, 0)
         RightSection.ScrollBarImageTransparency = 1
         RightSection.BackgroundTransparency = 1
-        RightSection.Position = UDim2.new(0, 464, 0, 86)
+        RightSection.Position = UDim2.new(0, 424, 0, 76)
         RightSection.BorderColor3 = Color3.fromRGB(0, 0, 0)
         RightSection.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         RightSection.BorderSizePixel = 0
