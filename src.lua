@@ -497,6 +497,11 @@ end
 function Library.new(settings)
 	settings = type(settings) == "table" and settings or {}
 
+	local customName = settings.UIName or settings.uiName or settings.Name or settings.name
+	if customName ~= nil then
+		Library.UIName(customName)
+	end
+
 	local customIcon = settings.CustomIcon or settings.customIcon or settings.Icon or settings.icon
 	if customIcon ~= nil then
 		Library.IconAsset(customIcon)
