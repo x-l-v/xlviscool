@@ -705,9 +705,6 @@ function Library:create_ui()
     SideGradient.Rotation = 90
     SideGradient.Parent = SideBar
 
-    --[[
-    -- Optional center image overlay.
-    -- Uncomment this block and replace the asset ID if you want a custom image in the window background.
     local CenterImage = Instance.new("ImageLabel")
     CenterImage.Name = "CenterImage"
     CenterImage.Parent = Container
@@ -719,7 +716,6 @@ function Library:create_ui()
     CenterImage.ScaleType = Enum.ScaleType.Fit
     CenterImage.ImageColor3 = UIAccentColor
     CenterImage.ImageTransparency = 0
-    ]]
 
     local UICorner = Instance.new('UICorner')
     UICorner.CornerRadius = UDim.new(0, 10)
