@@ -535,6 +535,7 @@ function Library.IconAsset(first, second)
 	return IconAsset
 end
 
+Library.Icon = Library.IconAsset
 Library.CustomIcon = Library.IconAsset
 
 function Library.IconAnimated(first, second)
@@ -1614,6 +1615,9 @@ function TabManager:moduleparagraph(settings: any)
 
     return ModuleManager
 end
+
+TabManager.create_paragraph = TabManager.moduleparagraph
+TabManager.CreateParagraph = TabManager.moduleparagraph
 
 function TabManager:create_image(settings: any)
     settings = settings or {}
