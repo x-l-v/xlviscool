@@ -1,9 +1,9 @@
 --[[
-    src.lua – Frostware UI Library (Fixed)
     Changes:
     - SetBackgroundMedia now respects opacity=0 and restores container background.
     - Added set_text method to button objects for dynamic title updates.
-]]
+	- More to be coming.
+]]--
 
 getgenv().GG = {
     Language = {
