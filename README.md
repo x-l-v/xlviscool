@@ -14,7 +14,7 @@ local IconAsset = "rbxassetid://10723407389"
 - Load Library
 
 ```lua
-local LoaderLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/x-l-v/StackFlow-Main-reupload/refs/heads/main/src.lua"))();
+local LoaderLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/x-l-v/xlviscool/refs/heads/main/src.lua"))();
 local Library = LoaderLibrary();
 ```
 - For Roblox Game
