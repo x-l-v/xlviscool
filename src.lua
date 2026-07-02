@@ -1948,12 +1948,12 @@ end
 
             local saved_flag = Library._config._flags[settings.flag]
 
-            if saved_flag then
+            if saved_flag ~= nil then
                 ModuleManager:change_state(saved_flag)
             end
 
             Header.MouseButton1Click:Connect(function()
-                ModuleManager:change_state(not self._state)
+                ModuleManager:change_state(not ModuleManager._state)
             end)
 
             return ModuleManager
@@ -1966,6 +1966,10 @@ end
             else
                 settings.section = LeftSection
             end
+
+            local ModuleManager = {
+                _state = false
+            }
 
             local Module = Instance.new('Frame')
             Module.ClipsDescendants = true
@@ -2052,7 +2056,9 @@ end
             UICorner3.Parent = Check
 
             function ModuleManager:change_state(state: any)
-                if state then
+                local resolved_state = state == true
+
+                if resolved_state then
                     TweenService:Create(Circle, TweenInfo.new(0.25, Enum.EasingStyle.Quint), {
                         BackgroundColor3 = UIAccentColor
                     }):Play()
@@ -2070,11 +2076,11 @@ end
                     }):Play()
                 end
 
-                self._state = state
-                Library._config._flags[settings.flag] = state
+                self._state = resolved_state
+                Library._config._flags[settings.flag] = resolved_state
 
                 if settings.callback then
-                    settings.callback(state)
+                    settings.callback(resolved_state)
                 end
 
                 Config:save(game.GameId, Library._config)
@@ -2086,15 +2092,8 @@ end
                 ModuleManager:change_state(saved_flag)
             end
 
-            local ModuleManager = {
-                change_state = function(self, state)
-                    ModuleManager:change_state(state)
-                end,
-                _state = self._state
-            }
-
             Header.MouseButton1Click:Connect(function()
-                ModuleManager:change_state(not self._state)
+                ModuleManager:change_state(not ModuleManager._state)
             end)
 
             return ModuleManager
@@ -2107,6 +2106,11 @@ end
             else
                 settings.section = LeftSection
             end
+
+            local ModuleManager = {
+                _state = false,
+                _value = settings.value or 0
+            }
 
             local Module = Instance.new('Frame')
             Module.ClipsDescendants = true
@@ -2210,6 +2214,7 @@ end
             FilledCorner.Parent = Filled
 
             function ModuleManager:update_value(value: any)
+                self._value = value
                 if not settings.round_number then
                     Value.Text = tostring(value)
                 else
@@ -2223,7 +2228,7 @@ end
 
             local saved_value = Library._config._flags[flag]
 
-            if saved_value then
+            if saved_value ~= nil then
                 if settings.value then
                     settings.value = saved_value
                 else
@@ -2242,7 +2247,8 @@ end
             end
 
             local value = settings.value or 0
-            local percentage = (value - minimum_value) / (maximum_value - minimum_value)
+            local range = maximum_value - minimum_value
+            local percentage = range ~= 0 and (value - minimum_value) / range or 0
 
             Filled.Size = UDim2.new(percentage * 0.855, 0, 0, 3)
 
@@ -2275,7 +2281,7 @@ end
 
                 local x = math.clamp(position.X - absolute_position.X, 0, absolute_size.X)
                 local percentage = math.clamp(x / absolute_size.X, 0, 1)
-                local value = minimum_value + percentage * (maximum_value - minimum_value)
+                local value = minimum_value + percentage * range
 
                 if settings.round_number then
                     value = math.round(value)
@@ -2294,14 +2300,11 @@ end
                 Config:save(game.GameId, Library._config)
             end)
 
-            local ModuleManager = {
-                change_state = function(self, state)
-                    self._state = state
-                    Library._config._flags[settings.flag] = state
-                    Config:save(game.GameId, Library._config)
-                end,
-                _state = self._state
-            }
+            function ModuleManager:change_state(state)
+                self._state = state == true
+                Library._config._flags[settings.flag] = self._state
+                Config:save(game.GameId, Library._config)
+            end
 
             return ModuleManager
         end
@@ -2675,7 +2678,7 @@ end
 
             -- Set saved text
             local saved_flag = Library._config._flags[settings.flag]
-            if saved_flag then
+            if saved_flag ~= nil then
                 TextBox.Text = tostring(saved_flag)
             end
 
@@ -2705,7 +2708,7 @@ end
                     Library._config._flags[settings.flag] = TextBox.Text
                     Config:save(game.GameId, Library._config)
                 end,
-                _state = self._state
+                _state = false
             }
 
             return ModuleManager
@@ -2775,7 +2778,7 @@ end
                 set_text = function(self, text)
                     Button.Text = tostring(text or "Button")
                 end,
-                _state = self._state
+                _state = false
             }
 
             return ModuleManager
