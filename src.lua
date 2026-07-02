@@ -759,7 +759,7 @@ function Library:create_ui()
     Container.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Container.AnchorPoint = Vector2.new(0.5, 0.5)
     Container.Name = 'Container'
-    Container.BackgroundTransparency = 1
+    Container.BackgroundTransparency = 0.16
     Container.BackgroundColor3 = Color3.fromRGB(8, 8, 10)
     Container.Position = UDim2.new(0.5, 0, 0.5, 0)
     Container.Size = UDim2.new(0, 0, 0, 0)
@@ -1139,10 +1139,10 @@ local function ClearBackgroundMedia()
 
 	-- Restore the container background when media is cleared
 	pcall(function()
-		Container.BackgroundTransparency = 1
-		ContainerGradient.Enabled = false
+		Container.BackgroundTransparency = 0.16
+		ContainerGradient.Enabled = true
 		SideBar.BackgroundTransparency = 1
-		SideGradient.Enabled = false
+		SideGradient.Enabled = true
 	end)
 end
 
@@ -1175,7 +1175,7 @@ function self:SetBackgroundMedia(mediaSettings)
 		return false
 	end
 
-	local source = mediaSettings.Source or mediaSettings.source or mediaSettings.Asset or mediaSettings.asset or mediaSettings.Url or mediaSettings.url or mediaSettings.Image or mediaSettings.image or mediaSettings.Video or mediaSettings.video or mediaSettings.Gif or mediaSettings.gif or mediaSettings.Media or mediaSettings.media or mediaSettings.File or mediaSettings.file or mediaSettings.Path or mediaSettings.path
+	local source = mediaSettings.Source or mediaSettings.source or mediaSettings.Asset or mediaSettings.asset or mediaSettings.Url or mediaSettings.url or mediaSettings.Image or mediaSettings.image or mediaSettings.Video or mediaSettings.video
 	local asset, detectedMediaType = ResolveBackgroundMediaAsset(source, mediaSettings.SaveAs or mediaSettings.saveAs or mediaSettings.Name or mediaSettings.name)
 
 	if not asset then
@@ -1196,7 +1196,7 @@ function self:SetBackgroundMedia(mediaSettings)
 
 	local media
 
-	if mediaType == "video" or mediaType == "mp4" or mediaType == "webm" or mediaType == "mov" then
+	if mediaType == "video" or mediaType == "mp4" or mediaType == "webm" then
 		media = Instance.new("VideoFrame")
 		media.Video = asset
 		media.Looped = mediaSettings.Looped ~= false and mediaSettings.looped ~= false
@@ -1371,7 +1371,7 @@ self.set_background_image = self.SetBackgroundMedia
 
     function self:Update1Run(a)
         if a == "nil" then
-            Container.BackgroundTransparency = 1;
+            Container.BackgroundTransparency = 0.05000000074505806;
         else
             pcall(function()
                 Container.BackgroundTransparency = tonumber(a);
@@ -3313,13 +3313,24 @@ end
                 FeatureButton.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
                 FeatureButton.TextSize = 11;
                 FeatureButton.Size = UDim2.new(1, -35, 0, 16)
-                FeatureButton.BackgroundColor3 = Color3.fromRGB(32, 38, 51)
-                FeatureButton.TextColor3 = Color3.fromRGB(210, 210, 210)
+                FeatureButton.BackgroundColor3 = Color3.fromRGB(34, 14, 18)
+                FeatureButton.TextColor3 = Color3.fromRGB(235, 235, 235)
                 FeatureButton.Text = "    " .. settings.title or "    " .. "Feature"
                 FeatureButton.AutoButtonColor = false
                 FeatureButton.TextXAlignment = Enum.TextXAlignment.Left
-                FeatureButton.TextTransparency = 0.2
+                FeatureButton.TextTransparency = 0.12
                 FeatureButton.Parent = FeatureContainer
+
+                local FeatureCorner = Instance.new("UICorner")
+                FeatureCorner.CornerRadius = UDim.new(0, 4)
+                FeatureCorner.Parent = FeatureButton
+
+                local FeatureStroke = Instance.new("UIStroke")
+                FeatureStroke.Color = UIAccentColor
+                FeatureStroke.Transparency = 0.15
+                FeatureStroke.Thickness = 1
+                FeatureStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                FeatureStroke.Parent = FeatureButton
             
                 local RightContainer = Instance.new("Frame")
                 RightContainer.Size = UDim2.new(0, 45, 0, 16)
@@ -3335,11 +3346,11 @@ end
             
                 local KeybindBox = Instance.new("TextLabel")
                 KeybindBox.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
-                KeybindBox.Size = UDim2.new(0, 15, 0, 15)
+                KeybindBox.Size = UDim2.new(0, 28, 0, 15)
                 KeybindBox.BackgroundColor3 = UIAccentColor
                 KeybindBox.TextColor3 = Color3.fromRGB(255, 255, 255)
                 KeybindBox.TextSize = 11
-                KeybindBox.BackgroundTransparency = 1
+                KeybindBox.BackgroundTransparency = 0.15
                 KeybindBox.LayoutOrder = 2;
                 KeybindBox.Parent = RightContainer
             
@@ -3356,6 +3367,23 @@ end
                 UIStroke.Color = UIAccentColor
                 UIStroke.Thickness = 1
                 UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+                local function ResizeKeybindBox(text)
+                    local label = tostring(text or "...")
+                    local textWidth = 18 + (string.len(label) * 6)
+
+                    pcall(function()
+                        local fontParams = Instance.new("GetTextBoundsParams")
+                        fontParams.Text = label
+                        fontParams.Font = KeybindBox.FontFace
+                        fontParams.Size = KeybindBox.TextSize
+                        fontParams.Width = 1000
+                        local textBounds = TextService:GetTextBoundsAsync(fontParams)
+                        textWidth = math.max(18, textBounds.X + 10)
+                    end)
+
+                    KeybindBox.Size = UDim2.new(0, textWidth, 0, 15)
+                end
             
                 if not Library._config._flags then
                     Library._config._flags = {}
@@ -3363,7 +3391,7 @@ end
             
                 if not Library._config._flags[settings.flag] then
                     Library._config._flags[settings.flag] = {
-                        checked = false,
+                        checked = settings.checked == true,
                         BIND = settings.default or "Unknown"
                     }
                 end
@@ -3374,6 +3402,8 @@ end
                 if KeybindBox.Text == "Unknown" then
                     KeybindBox.Text = "...";
                 end;
+
+                ResizeKeybindBox(KeybindBox.Text)
 
                 local UseF_Var = nil;
             
@@ -3418,21 +3448,32 @@ end
             
                 KeybindButton.MouseButton1Click:Connect(function()
                     KeybindBox.Text = "..."
+                    ResizeKeybindBox(KeybindBox.Text)
                     local inputConnection
-                    inputConnection = game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+                    inputConnection = UserInputService.InputBegan:Connect(function(input, gameProcessed)
                         if gameProcessed then return end
                         if input.UserInputType == Enum.UserInputType.Keyboard then
                             local newKey = input.KeyCode.Name
                             Library._config._flags[settings.flag].BIND = newKey
                             if newKey ~= "Unknown" then
                                 KeybindBox.Text = newKey;
+                            else
+                                KeybindBox.Text = "..."
                             end;
-                            Config:save(game.GameId, Library._config) -- Save new keybind
+                            ResizeKeybindBox(KeybindBox.Text)
+                            Config:save(game.GameId, Library._config)
+                            if settings.bind_callback then
+                                settings.bind_callback(newKey ~= "Unknown" and newKey or nil)
+                            end
                             inputConnection:Disconnect()
                         elseif input.UserInputType == Enum.UserInputType.MouseButton3 then
                             Library._config._flags[settings.flag].BIND = "Unknown"
                             KeybindBox.Text = "..."
+                            ResizeKeybindBox(KeybindBox.Text)
                             Config:save(game.GameId, Library._config)
+                            if settings.bind_callback then
+                                settings.bind_callback(nil)
+                            end
                             inputConnection:Disconnect()
                         end
                     end)
@@ -3440,7 +3481,7 @@ end
                 end)
             
                 local keyPressConnection
-                keyPressConnection = game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+                keyPressConnection = UserInputService.InputBegan:Connect(function(input, gameProcessed)
                     if gameProcessed then return end
                     if input.UserInputType == Enum.UserInputType.Keyboard then
                         if input.KeyCode.Name == Library._config._flags[settings.flag].BIND then
