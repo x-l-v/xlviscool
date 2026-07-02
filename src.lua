@@ -783,7 +783,7 @@ function Library:create_ui()
     BackgroundMediaHolder.Visible = false
     BackgroundMediaHolder.Size = UDim2.fromScale(1, 1)
     BackgroundMediaHolder.Position = UDim2.fromScale(0, 0)
-    BackgroundMediaHolder.ZIndex = 1
+    BackgroundMediaHolder.ZIndex = 0
     BackgroundMediaHolder.Parent = Container
 
     local BackgroundMediaCorner = Instance.new("UICorner")
@@ -1109,8 +1109,6 @@ local function ResolveBackgroundMediaAsset(source, name)
 			if ok and customAsset then
 				return customAsset, mediaType
 			end
-
-			return filePath, mediaType
 		end
 	end
 
@@ -1227,7 +1225,7 @@ function self:SetBackgroundMedia(mediaSettings)
 	media.BorderSizePixel = 0
 	media.Size = UDim2.fromScale(1, 1)
 	media.Position = UDim2.fromScale(0, 0)
-	media.ZIndex = 1
+	media.ZIndex = 0
 	media.Parent = BackgroundMediaHolder
 
 	if media:IsA("VideoFrame") then
@@ -1249,7 +1247,7 @@ function self:SetBackgroundMedia(mediaSettings)
 		dim.BorderSizePixel = 0
 		dim.Size = UDim2.fromScale(1, 1)
 		dim.Position = UDim2.fromScale(0, 0)
-		dim.ZIndex = 2
+		dim.ZIndex = 0
 		dim.Parent = BackgroundMediaHolder
 	end
 
