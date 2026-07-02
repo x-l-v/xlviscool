@@ -3313,24 +3313,13 @@ end
                 FeatureButton.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
                 FeatureButton.TextSize = 11;
                 FeatureButton.Size = UDim2.new(1, -35, 0, 16)
-                FeatureButton.BackgroundColor3 = Color3.fromRGB(34, 14, 18)
-                FeatureButton.TextColor3 = Color3.fromRGB(235, 235, 235)
+                FeatureButton.BackgroundColor3 = Color3.fromRGB(32, 38, 51)
+                FeatureButton.TextColor3 = Color3.fromRGB(210, 210, 210)
                 FeatureButton.Text = "    " .. settings.title or "    " .. "Feature"
                 FeatureButton.AutoButtonColor = false
                 FeatureButton.TextXAlignment = Enum.TextXAlignment.Left
-                FeatureButton.TextTransparency = 0.12
+                FeatureButton.TextTransparency = 0.2
                 FeatureButton.Parent = FeatureContainer
-
-                local FeatureCorner = Instance.new("UICorner")
-                FeatureCorner.CornerRadius = UDim.new(0, 4)
-                FeatureCorner.Parent = FeatureButton
-
-                local FeatureStroke = Instance.new("UIStroke")
-                FeatureStroke.Color = UIAccentColor
-                FeatureStroke.Transparency = 0.15
-                FeatureStroke.Thickness = 1
-                FeatureStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                FeatureStroke.Parent = FeatureButton
             
                 local RightContainer = Instance.new("Frame")
                 RightContainer.Size = UDim2.new(0, 45, 0, 16)
@@ -3346,11 +3335,11 @@ end
             
                 local KeybindBox = Instance.new("TextLabel")
                 KeybindBox.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
-                KeybindBox.Size = UDim2.new(0, 28, 0, 15)
+                KeybindBox.Size = UDim2.new(0, 15, 0, 15)
                 KeybindBox.BackgroundColor3 = UIAccentColor
                 KeybindBox.TextColor3 = Color3.fromRGB(255, 255, 255)
                 KeybindBox.TextSize = 11
-                KeybindBox.BackgroundTransparency = 0.15
+                KeybindBox.BackgroundTransparency = 1
                 KeybindBox.LayoutOrder = 2;
                 KeybindBox.Parent = RightContainer
             
@@ -3367,23 +3356,6 @@ end
                 UIStroke.Color = UIAccentColor
                 UIStroke.Thickness = 1
                 UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-
-                local function ResizeKeybindBox(text)
-                    local label = tostring(text or "...")
-                    local textWidth = 18 + (string.len(label) * 6)
-
-                    pcall(function()
-                        local fontParams = Instance.new("GetTextBoundsParams")
-                        fontParams.Text = label
-                        fontParams.Font = KeybindBox.FontFace
-                        fontParams.Size = KeybindBox.TextSize
-                        fontParams.Width = 1000
-                        local textBounds = TextService:GetTextBoundsAsync(fontParams)
-                        textWidth = math.max(18, textBounds.X + 10)
-                    end)
-
-                    KeybindBox.Size = UDim2.new(0, textWidth, 0, 15)
-                end
             
                 if not Library._config._flags then
                     Library._config._flags = {}
@@ -3391,7 +3363,7 @@ end
             
                 if not Library._config._flags[settings.flag] then
                     Library._config._flags[settings.flag] = {
-                        checked = settings.checked == true,
+                        checked = false,
                         BIND = settings.default or "Unknown"
                     }
                 end
@@ -3402,8 +3374,6 @@ end
                 if KeybindBox.Text == "Unknown" then
                     KeybindBox.Text = "...";
                 end;
-
-                ResizeKeybindBox(KeybindBox.Text)
 
                 local UseF_Var = nil;
             
@@ -3448,32 +3418,21 @@ end
             
                 KeybindButton.MouseButton1Click:Connect(function()
                     KeybindBox.Text = "..."
-                    ResizeKeybindBox(KeybindBox.Text)
                     local inputConnection
-                    inputConnection = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                    inputConnection = game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
                         if gameProcessed then return end
                         if input.UserInputType == Enum.UserInputType.Keyboard then
                             local newKey = input.KeyCode.Name
                             Library._config._flags[settings.flag].BIND = newKey
                             if newKey ~= "Unknown" then
                                 KeybindBox.Text = newKey;
-                            else
-                                KeybindBox.Text = "..."
                             end;
-                            ResizeKeybindBox(KeybindBox.Text)
-                            Config:save(game.GameId, Library._config)
-                            if settings.bind_callback then
-                                settings.bind_callback(newKey ~= "Unknown" and newKey or nil)
-                            end
+                            Config:save(game.GameId, Library._config) -- Save new keybind
                             inputConnection:Disconnect()
                         elseif input.UserInputType == Enum.UserInputType.MouseButton3 then
                             Library._config._flags[settings.flag].BIND = "Unknown"
                             KeybindBox.Text = "..."
-                            ResizeKeybindBox(KeybindBox.Text)
                             Config:save(game.GameId, Library._config)
-                            if settings.bind_callback then
-                                settings.bind_callback(nil)
-                            end
                             inputConnection:Disconnect()
                         end
                     end)
@@ -3481,7 +3440,7 @@ end
                 end)
             
                 local keyPressConnection
-                keyPressConnection = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                keyPressConnection = game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
                     if gameProcessed then return end
                     if input.UserInputType == Enum.UserInputType.Keyboard then
                         if input.KeyCode.Name == Library._config._flags[settings.flag].BIND then
