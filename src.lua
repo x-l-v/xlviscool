@@ -1072,8 +1072,14 @@ local function ResolveBackgroundMediaAsset(source, name)
 	if source:match("^https?://") and type(writefile) == "function" and type(getcustomasset) == "function" then
 		local mediaFolder = ConfigFolder .. "/BackgroundMedia"
 
-		if type(isfolder) == "function" and type(makefolder) == "function" and not isfolder(mediaFolder) then
-			pcall(makefolder, mediaFolder)
+		if type(isfolder) == "function" and type(makefolder) == "function" then
+			if not isfolder(ConfigFolder) then
+				pcall(makefolder, ConfigFolder)
+			end
+
+			if not isfolder(mediaFolder) then
+				pcall(makefolder, mediaFolder)
+			end
 		end
 
 		local fileName = tostring(name or "background_media"):gsub("[^%w_%-]", "_")
@@ -1093,12 +1099,18 @@ local function ResolveBackgroundMediaAsset(source, name)
 			end
 		end
 
+		if type(isfile) == "function" and not isfile(filePath) then
+			return nil, nil
+		end
+
 		if type(isfile) ~= "function" or isfile(filePath) then
 			local ok, customAsset = pcall(getcustomasset, filePath)
 
 			if ok and customAsset then
 				return customAsset, mediaType
 			end
+
+			return filePath, mediaType
 		end
 	end
 
