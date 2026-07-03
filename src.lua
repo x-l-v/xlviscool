@@ -1130,20 +1130,13 @@ end
 local function ClearBackgroundMedia()
 	BackgroundMediaToken += 1
 	BackgroundMediaHolder.Visible = false
+	Container.BackgroundTransparency = 0.16
 
 	for _, child in BackgroundMediaHolder:GetChildren() do
 		if child ~= BackgroundMediaCorner then
 			child:Destroy()
 		end
 	end
-
-	-- Restore the container background when media is cleared
-	pcall(function()
-		Container.BackgroundTransparency = 0.16
-		ContainerGradient.Enabled = true
-		SideBar.BackgroundTransparency = 1
-		SideGradient.Enabled = true
-	end)
 end
 
 function self:ClearBackgroundMedia()
@@ -1196,7 +1189,7 @@ function self:SetBackgroundMedia(mediaSettings)
 
 	local media
 
-	if mediaType == "video" or mediaType == "mp4" or mediaType == "webm" then
+	if mediaType == "video" or mediaType == "mp4" or mediaType == "webm" or mediaType == "mov" then
 		media = Instance.new("VideoFrame")
 		media.Video = asset
 		media.Looped = mediaSettings.Looped ~= false and mediaSettings.looped ~= false
@@ -1261,14 +1254,8 @@ function self:SetBackgroundMedia(mediaSettings)
 
 	BackgroundMediaHolder.Visible = token == BackgroundMediaToken
 
-	-- Make the container transparent so the background media shows through
 	if token == BackgroundMediaToken then
-		pcall(function()
-			Container.BackgroundTransparency = 1
-			ContainerGradient.Enabled = false
-			SideBar.BackgroundTransparency = 1
-			SideGradient.Enabled = false
-		end)
+		Container.BackgroundTransparency = 1
 	end
 
 	return true
