@@ -100,7 +100,6 @@ return function(func)
 
 			if i == 'getgenv' then
 				return function()
-					print('use exploit env')
 					return OldEnv
 				end
 			end;
