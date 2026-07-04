@@ -383,6 +383,13 @@ local Library = {
 }
 Library.__index = Library
 
+local savedColor = Library._config and Library._config._library and Library._config._library.uiColor
+if savedColor then
+	AccentColor = Color3.new(savedColor.R, savedColor.G, savedColor.B)
+	AccentToggle = Library._config._library.uiColorEnabled == true
+	UpdateUIAccentColor()
+end
+
 local function ResolveMethodValue(first, second)
 	if first == Library then
 		return second
@@ -469,7 +476,15 @@ function Library.UIAccent(first, second, third)
 		AccentColor = color
 	end
 
-	return UpdateUIAccentColor()
+	UpdateUIAccentColor()
+
+	if type(Library._config) == "table" and type(Library._config._library) == "table" then
+		Library._config._library.uiColor = {R = AccentColor.R, G = AccentColor.G, B = AccentColor.B}
+		Library._config._library.uiColorEnabled = AccentToggle
+		Config:save(game.GameId, Library._config)
+	end
+
+	return UIAccentColor
 end
 
 function Library.IconAsset(first, second)
@@ -606,48 +621,60 @@ function Library.SendNotification(settings)
 
     -- Create the inner frame for the notification's content
     local InnerFrame = Instance.new("Frame")
-    InnerFrame.Size = UDim2.new(1, 0, 0, 60)  -- Start with an initial height, width will adapt
-    InnerFrame.Position = UDim2.new(0, 0, 0, 0)  -- Positioned inside the outer notification frame
+    InnerFrame.Size = UDim2.new(1, 0, 0, 60)
+    InnerFrame.Position = UDim2.new(0, 0, 0, 0)
     InnerFrame.BackgroundColor3 = Color3.fromRGB(32, 38, 51)
-    InnerFrame.BackgroundTransparency = 0.1
+    InnerFrame.BackgroundTransparency = 0.15
     InnerFrame.BorderSizePixel = 0
     InnerFrame.Name = "InnerFrame"
     InnerFrame.Parent = Notification
-    InnerFrame.AutomaticSize = Enum.AutomaticSize.Y  -- Automatically resize based on its content
+    InnerFrame.AutomaticSize = Enum.AutomaticSize.Y
 
-    -- Add rounded corners to the inner frame
     local InnerUICorner = Instance.new("UICorner")
     InnerUICorner.CornerRadius = UDim.new(0, 4)
     InnerUICorner.Parent = InnerFrame
 
-    -- Title Label (with automatic size support)
+    local AccentBar = Instance.new("Frame")
+    AccentBar.Size = UDim2.new(0, 3, 1, -6)
+    AccentBar.Position = UDim2.new(0, 0, 0, 3)
+    AccentBar.BackgroundColor3 = UIAccentColor
+    AccentBar.BackgroundTransparency = 0
+    AccentBar.BorderSizePixel = 0
+    AccentBar.Name = "AccentBar"
+    AccentBar.Parent = InnerFrame
+
+    local AccentBarCorner = Instance.new("UICorner")
+    AccentBarCorner.CornerRadius = UDim.new(0, 2)
+    AccentBarCorner.Parent = AccentBar
+
     local Title = Instance.new("TextLabel")
     Title.Text = settings.title or "Notification Title"
     Title.TextColor3 = Color3.fromRGB(210, 210, 210)
+    Title.TextStrokeTransparency = 0.5
     Title.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
     Title.TextSize = 14
-    Title.Size = UDim2.new(1, -10, 0, 20)  -- Width is 1 (100% of parent width), height is fixed initially
-    Title.Position = UDim2.new(0, 5, 0, 5)
+    Title.Size = UDim2.new(1, -16, 0, 20)
+    Title.Position = UDim2.new(0, 8, 0, 5)
     Title.BackgroundTransparency = 1
     Title.TextXAlignment = Enum.TextXAlignment.Left
     Title.TextYAlignment = Enum.TextYAlignment.Center
-    Title.TextWrapped = true  -- Enable wrapping
-    Title.AutomaticSize = Enum.AutomaticSize.Y  -- Allow the title to resize based on content
+    Title.TextWrapped = true
+    Title.AutomaticSize = Enum.AutomaticSize.Y
     Title.Parent = InnerFrame
 
-    -- Body Text (with automatic size support)
     local Body = Instance.new("TextLabel")
     Body.Text = settings.text or "This is the body of the notification."
     Body.TextColor3 = Color3.fromRGB(180, 180, 180)
+    Body.TextStrokeTransparency = 0.6
     Body.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     Body.TextSize = 12
-    Body.Size = UDim2.new(1, -10, 0, 30)  -- Width is 1 (100% of parent width), height is fixed initially
-    Body.Position = UDim2.new(0, 5, 0, 25)
+    Body.Size = UDim2.new(1, -16, 0, 30)
+    Body.Position = UDim2.new(0, 8, 0, 25)
     Body.BackgroundTransparency = 1
     Body.TextXAlignment = Enum.TextXAlignment.Left
     Body.TextYAlignment = Enum.TextYAlignment.Top
-    Body.TextWrapped = true  -- Enable wrapping for long text
-    Body.AutomaticSize = Enum.AutomaticSize.Y  -- Allow the body text to resize based on content
+    Body.TextWrapped = true
+    Body.AutomaticSize = Enum.AutomaticSize.Y
     Body.Parent = InnerFrame
 
     -- Force the size to adjust after the text is fully loaded and wrapped
@@ -826,8 +853,9 @@ function Library:create_ui()
     UICorner.Parent = Container
     
     local UIStroke = Instance.new('UIStroke')
-    UIStroke.Color = Color3.fromRGB(62, 62, 68)
-    UIStroke.Transparency = 0.35
+    UIStroke.Color = Color3.fromRGB(75, 75, 85)
+    UIStroke.Transparency = 0.55
+    UIStroke.Thickness = 1
     UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     UIStroke.Parent = Container
     
@@ -1545,6 +1573,7 @@ self.set_background_image = self.SetBackgroundMedia
         TextLabel.BorderSizePixel = 0
         TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
         TextLabel.TextSize = 13
+        TextLabel.TextStrokeTransparency = 0.55
         TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         TextLabel.Parent = Tab
         
@@ -1654,12 +1683,12 @@ function TabManager:moduleparagraph(settings: any)
     local Module = Instance.new('Frame')
     Module.ClipsDescendants = true
     Module.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Module.BackgroundTransparency = 0.18
+    Module.BackgroundTransparency = 0.42
     Module.Position = UDim2.new(0.004115226212888956, 0, 0, 0)
     Module.Name = 'ModuleParagraph'
     Module.Size = UDim2.new(0, 218, 0, 70)
     Module.BorderSizePixel = 0
-    Module.BackgroundColor3 = Color3.fromRGB(12, 12, 13)
+    Module.BackgroundColor3 = Color3.fromRGB(10, 10, 12)
     Module.Parent = settings.section
 
     local UIListLayout = Instance.new('UIListLayout')
@@ -1667,12 +1696,13 @@ function TabManager:moduleparagraph(settings: any)
     UIListLayout.Parent = Module
     
     local UICorner = Instance.new('UICorner')
-    UICorner.CornerRadius = UDim.new(0, 6)
+    UICorner.CornerRadius = UDim.new(0, 8)
     UICorner.Parent = Module
     
     local UIStroke = Instance.new('UIStroke')
-    UIStroke.Color = Color3.fromRGB(48, 48, 52)
-    UIStroke.Transparency = 0.3
+    UIStroke.Color = Color3.fromRGB(75, 75, 85)
+    UIStroke.Transparency = 0.5
+    UIStroke.Thickness = 1
     UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     UIStroke.Parent = Module
     
@@ -1703,6 +1733,7 @@ function TabManager:moduleparagraph(settings: any)
     ModuleName.BorderSizePixel = 0
     ModuleName.BorderColor3 = Color3.fromRGB(0, 0, 0)
     ModuleName.TextSize = 13
+    ModuleName.TextStrokeTransparency = 0.6
     ModuleName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     ModuleName.Parent = Header
     
@@ -1710,6 +1741,7 @@ function TabManager:moduleparagraph(settings: any)
     Description.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
     Description.TextColor3 = UIAccentColor
     Description.TextTransparency = 0.699999988079071
+    Description.TextStrokeTransparency = 0.65
     Description.Text = settings.description or "This is a description paragraph."
     Description.Name = 'Description'
     Description.Size = UDim2.new(0, 184, 0, 28)
@@ -1739,21 +1771,22 @@ function TabManager:create_image(settings: any)
     local Module = Instance.new('Frame')
     Module.ClipsDescendants = true
     Module.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Module.BackgroundTransparency = 0.18
+    Module.BackgroundTransparency = 0.42
     Module.Position = UDim2.new(0.004, 0, 0, 0)
     Module.Name = 'ImageModule'
     Module.Size = UDim2.new(0, 218, 0, 140) 
     Module.BorderSizePixel = 0
-    Module.BackgroundColor3 = Color3.fromRGB(12, 12, 13)
+    Module.BackgroundColor3 = Color3.fromRGB(10, 10, 12)
     Module.Parent = settings.section
 
     local UICorner = Instance.new('UICorner')
-    UICorner.CornerRadius = UDim.new(0, 6)
+    UICorner.CornerRadius = UDim.new(0, 8)
     UICorner.Parent = Module
     
     local UIStroke = Instance.new('UIStroke')
-    UIStroke.Color = Color3.fromRGB(48, 48, 52)
-    UIStroke.Transparency = 0.3
+    UIStroke.Color = Color3.fromRGB(75, 75, 85)
+    UIStroke.Transparency = 0.5
+    UIStroke.Thickness = 1
     UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     UIStroke.Parent = Module
     
@@ -1790,12 +1823,12 @@ end
             local Module = Instance.new('Frame')
             Module.ClipsDescendants = true
             Module.BorderColor3 = Color3.fromRGB(0, 0, 0)
-            Module.BackgroundTransparency = 0.18
+            Module.BackgroundTransparency = 0.42
             Module.Position = UDim2.new(0.004115226212888956, 0, 0, 0)
             Module.Name = 'Module'
             Module.Size = UDim2.new(0, 218, 0, 93)
             Module.BorderSizePixel = 0
-            Module.BackgroundColor3 = Color3.fromRGB(12, 12, 13)
+            Module.BackgroundColor3 = Color3.fromRGB(10, 10, 12)
             Module.Parent = settings.section
 
             local UIListLayout = Instance.new('UIListLayout')
@@ -1803,12 +1836,13 @@ end
             UIListLayout.Parent = Module
             
             local UICorner = Instance.new('UICorner')
-            UICorner.CornerRadius = UDim.new(0, 6)
+            UICorner.CornerRadius = UDim.new(0, 8)
             UICorner.Parent = Module
             
             local UIStroke = Instance.new('UIStroke')
-            UIStroke.Color = Color3.fromRGB(48, 48, 52)
-            UIStroke.Transparency = 0.3
+            UIStroke.Color = Color3.fromRGB(75, 75, 85)
+            UIStroke.Transparency = 0.5
+            UIStroke.Thickness = 1
             UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
             UIStroke.Parent = Module
             
@@ -1860,6 +1894,7 @@ end
             ModuleName.BorderSizePixel = 0
             ModuleName.BorderColor3 = Color3.fromRGB(0, 0, 0)
             ModuleName.TextSize = 13
+            ModuleName.TextStrokeTransparency = 0.6
             ModuleName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             ModuleName.Parent = Header
             
@@ -1867,6 +1902,7 @@ end
             Description.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
             Description.TextColor3 = UIAccentColor
             Description.TextTransparency = 0.699999988079071
+            Description.TextStrokeTransparency = 0.65
             Description.Text = settings.description
             Description.Name = 'Description'
             Description.Size = UDim2.new(0, 184, 0, 13)
@@ -2327,6 +2363,7 @@ end
                 Label.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
                 Label.TextColor3 = Color3.fromRGB(255, 255, 255)
                 Label.TextTransparency = 0.2
+                Label.TextStrokeTransparency = 0.55
                 Label.Text = settings.title or "Enter text"
                 Label.Size = UDim2.new(0, 188, 0, 13)
                 Label.AnchorPoint = Vector2.new(0, 0)
@@ -2416,6 +2453,7 @@ end
                 end
                 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
                 TitleLabel.TextTransparency = 0.2
+                TitleLabel.TextStrokeTransparency = 0.55
                 TitleLabel.Text = settings.title or "Skibidi"
                 TitleLabel.Size = UDim2.new(0, 124, 0, 13)
                 TitleLabel.AnchorPoint = Vector2.new(0, 0.5)
@@ -2582,10 +2620,11 @@ function ModuleManager:create_button(settings: any)
     Button.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
     Button.TextColor3 = Color3.fromRGB(255, 255, 255)
     Button.TextTransparency = 0.2
+    Button.TextStrokeTransparency = 0.5
     Button.Text = settings.title or "Button"
     Button.AutoButtonColor = true
-    Button.BackgroundTransparency = 0.2
-    Button.BackgroundColor3 = Color3.fromRGB(41, 49, 62)
+    Button.BackgroundTransparency = 0.15
+    Button.BackgroundColor3 = UIAccentColor
     Button.Name = "Button"
     Button.Size = UDim2.new(0, 188, 0, 20)
     Button.BorderSizePixel = 0
@@ -2648,7 +2687,7 @@ end
                     TextLabel.TextSize = 11
                     TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                     TextLabel.ZIndex = 3;
-                    TextLabel.TextStrokeTransparency = 0;
+                    TextLabel.TextStrokeTransparency = 0.5
                     TextLabel.Parent = OuterFrame
                 end;
                 
@@ -2724,13 +2763,14 @@ end
                 local TextLabel = Instance.new('TextLabel')
                 if GG.SelectedLanguage == "th" then
                     TextLabel.FontFace = Font.new("rbxasset://fonts/families/NotoSansThai.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-                    TextLabel.TextSize = 13;
-                else
-                    TextLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-                    TextLabel.TextSize = 11;
-                end;
-                TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-                TextLabel.TextTransparency = 0.20000000298023224
+                TextLabel.TextSize = 13;
+            else
+                TextLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                TextLabel.TextSize = 11;
+            end;
+            TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            TextLabel.TextTransparency = 0.20000000298023224
+            TextLabel.TextStrokeTransparency = 0.55
                 TextLabel.Text = settings.title
                 TextLabel.Size = UDim2.new(0, 137, 0, 13)
                 TextLabel.Position = UDim2.new(0, 0, 0.05000000074505806, 0)
@@ -2806,6 +2846,7 @@ end
                 Value.BorderSizePixel = 0
                 Value.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Value.TextSize = 10
+                Value.TextStrokeTransparency = 0.55
                 Value.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 Value.Parent = Slider
 
@@ -2939,6 +2980,7 @@ end
                 end;
                 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
                 TextLabel.TextTransparency = 0.20000000298023224
+                TextLabel.TextStrokeTransparency = 0.55
                 TextLabel.Text = settings.title
                 TextLabel.Size = UDim2.new(0, 188, 0, 13)
                 TextLabel.BackgroundTransparency = 1
@@ -2979,6 +3021,7 @@ end
                 CurrentOption.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
                 CurrentOption.TextColor3 = Color3.fromRGB(255, 255, 255)
                 CurrentOption.TextTransparency = 0.20000000298023224
+                CurrentOption.TextStrokeTransparency = 0.55
                 CurrentOption.Name = 'CurrentOption'
                 CurrentOption.Size = UDim2.new(0, 161, 0, 13)
                 CurrentOption.AnchorPoint = Vector2.new(0, 0.5)
@@ -3261,8 +3304,10 @@ end
                 end
 
                 function DropdownManager:New(value)
-                    Dropdown:Destroy(true);
-                    value.OrderValue = Dropdown.LayoutOrder
+                    local order = Dropdown.LayoutOrder
+                    Options:Destroy();
+                    Dropdown:Destroy();
+                    value.OrderValue = order
                     ModuleManager._multiplier -= CurrentDropSizeState
                     return ModuleManager:create_dropdown(value)
                 end;
