@@ -869,12 +869,14 @@ function Library:create_ui()
     Handler.Parent = Container
     
     local Tabs = Instance.new('ScrollingFrame')
-    Tabs.ScrollBarImageTransparency = 1
-    Tabs.ScrollBarThickness = 0
+    Tabs.ScrollBarImageTransparency = 0.85
+    Tabs.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 120)
+    Tabs.ScrollBarThickness = 4
+    Tabs.ScrollingDirection = Enum.ScrollingDirection.Y
     Tabs.Name = 'Tabs'
     Tabs.Size = UDim2.new(0, 118, 0, 325)
     Tabs.Selectable = false
-    Tabs.AutomaticCanvasSize = Enum.AutomaticSize.XY
+    Tabs.AutomaticCanvasSize = Enum.AutomaticSize.Y
     Tabs.BackgroundTransparency = 1
     Tabs.Position = UDim2.new(0, 14, 0, 58)
     Tabs.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -1600,12 +1602,14 @@ self.set_background_image = self.SetBackgroundMedia
 
         local LeftSection = Instance.new('ScrollingFrame')
         LeftSection.Name = 'LeftSection'
-        LeftSection.AutomaticCanvasSize = Enum.AutomaticSize.XY
-        LeftSection.ScrollBarThickness = 0
+        LeftSection.AutomaticCanvasSize = Enum.AutomaticSize.Y
+        LeftSection.ScrollBarThickness = 4
+        LeftSection.ScrollingDirection = Enum.ScrollingDirection.Y
         LeftSection.Size = UDim2.new(0, 218, 0, 316)
         LeftSection.Selectable = false
         LeftSection.AnchorPoint = Vector2.new(0, 0)
-        LeftSection.ScrollBarImageTransparency = 1
+        LeftSection.ScrollBarImageTransparency = 0.85
+        LeftSection.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 120)
         LeftSection.BackgroundTransparency = 1
         LeftSection.Position = UDim2.new(0, 155, 0, 70)
         LeftSection.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -1627,12 +1631,14 @@ self.set_background_image = self.SetBackgroundMedia
 
         local RightSection = Instance.new('ScrollingFrame')
         RightSection.Name = 'RightSection'
-        RightSection.AutomaticCanvasSize = Enum.AutomaticSize.XY
-        RightSection.ScrollBarThickness = 0
+        RightSection.AutomaticCanvasSize = Enum.AutomaticSize.Y
+        RightSection.ScrollBarThickness = 4
+        RightSection.ScrollingDirection = Enum.ScrollingDirection.Y
         RightSection.Size = UDim2.new(0, 218, 0, 316)
         RightSection.Selectable = false
         RightSection.AnchorPoint = Vector2.new(0, 0)
-        RightSection.ScrollBarImageTransparency = 1
+        RightSection.ScrollBarImageTransparency = 0.85
+        RightSection.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 120)
         RightSection.BackgroundTransparency = 1
         RightSection.Position = UDim2.new(0, 385, 0, 70)
         RightSection.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -2015,12 +2021,56 @@ end
             UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
             UIListLayout.Parent = Options
 
+            function ModuleManager:_measure_content()
+                local total = 0
+                local padding = UIListLayout.Padding.Offset
+                local children = {}
+                for _, child in Options:GetChildren() do
+                    if child:IsA("GuiObject") and child.Visible then
+                        table.insert(children, child)
+                    end
+                end
+                table.sort(children, function(a, b)
+                    return (a.LayoutOrder or 0) < (b.LayoutOrder or 0)
+                end)
+                for i, child in ipairs(children) do
+                    local h = child.Size.Y.Offset
+                    if h <= 0 then
+                        h = child.AbsoluteSize.Y
+                    end
+                    total = total + h
+                    if i < #children then
+                        total = total + padding
+                    end
+                end
+                total = total + UIPadding.PaddingTop.Offset + UIPadding.PaddingBottom.Offset
+                return math.max(total, 8)
+            end
+
+            function ModuleManager:refresh_size()
+                if Options and Options.Parent then
+                    local contentHeight = self:_measure_content()
+                    if contentHeight > 8 then
+                        self._size = math.max(self._size, contentHeight)
+                        Options.Size = UDim2.fromOffset(218, self._size)
+                        if self._state then
+                            Module.Size = UDim2.fromOffset(218, 93 + self._size + self._multiplier)
+                        end
+                    end
+                end
+            end
+
             function ModuleManager:change_state(state: boolean)
                 self._state = state
 
                 if self._state then
+                    self:refresh_size()
                     TweenService:Create(Module, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                         Size = UDim2.fromOffset(218, 93 + self._size + self._multiplier)
+                    }):Play()
+
+                    TweenService:Create(Module.Options, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        Size = UDim2.fromOffset(218, self._size + self._multiplier)
                     }):Play()
 
                     TweenService:Create(Toggle, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
@@ -2034,6 +2084,10 @@ end
                 else
                     TweenService:Create(Module, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                         Size = UDim2.fromOffset(218, 93)
+                    }):Play()
+
+                    TweenService:Create(Module.Options, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        Size = UDim2.fromOffset(218, 0)
                     }):Play()
 
                     TweenService:Create(Toggle, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
@@ -3054,13 +3108,13 @@ end
                 Arrow.Parent = Header
                 
                 local Options = Instance.new('ScrollingFrame')
-                Options.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
+                Options.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 120)
                 Options.Active = true
-                Options.ScrollBarImageTransparency = 1
-                Options.AutomaticCanvasSize = Enum.AutomaticSize.XY
-                Options.ScrollBarThickness = 0
+                Options.ScrollBarImageTransparency = 0.85
+                Options.AutomaticCanvasSize = Enum.AutomaticSize.Y
+                Options.ScrollBarThickness = 3
                 Options.Name = 'Options'
-                Options.Size = UDim2.new(0, 188, 0, 0)
+                Options.Size = UDim2.new(0, 188, 0, 22)
                 Options.BackgroundTransparency = 1
                 Options.Position = UDim2.new(0, 0, 1, 0)
                 Options.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -3197,6 +3251,8 @@ end
 
                         CurrentDropSizeState = self._size;
 
+                        ModuleManager:refresh_size()
+
                         TweenService:Create(Module, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                             Size = UDim2.fromOffset(218, 93 + ModuleManager._size + ModuleManager._multiplier)
                         }):Play()
@@ -3220,6 +3276,8 @@ end
                         ModuleManager._multiplier -= self._size
 
                         CurrentDropSizeState = 0;
+
+                        ModuleManager:refresh_size()
 
                         TweenService:Create(Module, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                             Size = UDim2.fromOffset(218, 93 + ModuleManager._size + ModuleManager._multiplier)
@@ -3308,7 +3366,11 @@ end
                     ModuleManager._size -= 44
                     LayoutOrderModule = order - 1
                     ModuleManager._multiplier -= CurrentDropSizeState
-                    return ModuleManager:create_dropdown(value)
+                    local result = ModuleManager:create_dropdown(value)
+                    task.defer(function()
+                        ModuleManager:refresh_size()
+                    end)
+                    return result
                 end;
 
                 if Library:flag_type(settings.flag, 'string') then
