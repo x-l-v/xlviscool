@@ -3608,8 +3608,15 @@ end
 
     local lastShiftToggle = 0
     Connections['library_visiblity'] = UserInputService.InputBegan:Connect(function(input: InputObject, process: boolean)
-        if input.KeyCode ~= Enum.KeyCode.LeftShift then
+        -- Use RightShift to toggle UI and ignore toggle if a color picker is open
+        if input.KeyCode ~= Enum.KeyCode.RightShift then
             return
+        end
+        -- if color picker open globally, don't toggle UI
+        if pcall(function() return getgenv().HyperionColorPickerOpen == true end) then
+            if getgenv().HyperionColorPickerOpen == true then
+                return
+            end
         end
         local now = tick()
         if now - lastShiftToggle < 0.3 then return end
