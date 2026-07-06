@@ -3607,6 +3607,7 @@ end
     end
 
     Connections['library_visiblity'] = UserInputService.InputBegan:Connect(function(input: InputObject, process: boolean)
+        if process then return end
         if input.KeyCode ~= Enum.KeyCode.LeftShift then
             return
         end
