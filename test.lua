@@ -3606,11 +3606,14 @@ end
         return TabManager
     end
 
+    local lastShiftToggle = 0
     Connections['library_visiblity'] = UserInputService.InputBegan:Connect(function(input: InputObject, process: boolean)
-        if process then return end
         if input.KeyCode ~= Enum.KeyCode.LeftShift then
             return
         end
+        local now = tick()
+        if now - lastShiftToggle < 0.3 then return end
+        lastShiftToggle = now
 
         self._ui_open = not self._ui_open
         self:change_visiblity(self._ui_open)
@@ -3625,5 +3628,3 @@ end
 end
 
 return Library
-      
-       
