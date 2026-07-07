@@ -18,7 +18,7 @@ getgenv().GG = {
     }
 }
 
-local UIName = "Frostware"
+local UIName = "Hyperion"
 local ConfigFolder = UIName
 local AccentToggle = false
 local AccentColor = Color3.fromRGB(255, 120, 180)
@@ -65,10 +65,10 @@ local CoreGui = cloneref(game:GetService('CoreGui'))
 local Debris = cloneref(game:GetService('Debris'))
 
 local mouse = Players.LocalPlayer:GetMouse()
-local old_Frostware = CoreGui:FindFirstChild(UIName)
+local old_Hyperion = CoreGui:FindFirstChild(UIName)
 
-if old_Frostware then
-    Debris:AddItem(old_Frostware, 0)
+if old_Hyperion then
+    Debris:AddItem(old_Hyperion, 0)
 end
 
 if not isfolder(ConfigFolder) then
@@ -769,20 +769,20 @@ function Library:remove_table_value(__table: any, table_value: string)
 end
 
 function Library:create_ui()
-    local old_Frostware = CoreGui:FindFirstChild(UIName)
+    local old_Hyperion = CoreGui:FindFirstChild(UIName)
 
-    if old_Frostware then
-        Debris:AddItem(old_Frostware, 0)
+    if old_Hyperion then
+        Debris:AddItem(old_Hyperion, 0)
     end
 
-    local Frostware = Instance.new('ScreenGui')
-    Frostware.ResetOnSpawn = false
-    Frostware.Name = UIName
-    Frostware.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    Frostware.Parent = CoreGui
+local Hyperion = Instance.new('ScreenGui')
+Hyperion.ResetOnSpawn = false
+Hyperion.Name = UIName
+Hyperion.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Hyperion.Parent = CoreGui
     
     local Container = Instance.new('Frame')
-    Container.ClipsDescendants = true
+    Container.ClipsDescendants = false
     Container.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Container.AnchorPoint = Vector2.new(0.5, 0.5)
     Container.Name = 'Container'
@@ -792,7 +792,7 @@ function Library:create_ui()
     Container.Size = UDim2.new(0, 0, 0, 0)
     Container.Active = true
     Container.BorderSizePixel = 0
-    Container.Parent = Frostware
+    Container.Parent = Hyperion
 
     local ContainerGradient = Instance.new("UIGradient")
     ContainerGradient.Color = ColorSequence.new{
@@ -1382,7 +1382,7 @@ self.set_background_image = self.SetBackgroundMedia
     local UIScale = Instance.new('UIScale')
     UIScale.Parent = Container    
     
-    self._ui = Frostware
+    self._ui = Hyperion
     self._background_media_holder = BackgroundMediaHolder
 
     local function on_drag(input: InputObject, process: boolean)
@@ -1440,7 +1440,7 @@ self.set_background_image = self.SetBackgroundMedia
     end;
 
     function self:UIVisiblity()
-        Frostware.Enabled = not Frostware.Enabled;
+        Hyperion.Enabled = not Hyperion.Enabled;
     end;
 
     function self:change_visiblity(state: boolean)
@@ -1459,7 +1459,7 @@ self.set_background_image = self.SetBackgroundMedia
     function self:load()
         local content = {}
     
-        for _, object in Frostware:GetDescendants() do
+        for _, object in Hyperion:GetDescendants() do
             if not object:IsA('ImageLabel') then
                 continue
             end
@@ -1717,7 +1717,7 @@ function TabManager:moduleparagraph(settings: any)
     end
 
     local Module = Instance.new('Frame')
-    Module.ClipsDescendants = true
+    Module.ClipsDescendants = false
     Module.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Module.BackgroundTransparency = 0.42
     Module.Position = UDim2.new(0.004115226212888956, 0, 0, 0)
@@ -1805,7 +1805,7 @@ function TabManager:create_image(settings: any)
     end
 
     local Module = Instance.new('Frame')
-    Module.ClipsDescendants = true
+    Module.ClipsDescendants = false
     Module.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Module.BackgroundTransparency = 0.42
     Module.Position = UDim2.new(0.004, 0, 0, 0)
@@ -1857,7 +1857,7 @@ end
             end
 
             local Module = Instance.new('Frame')
-            Module.ClipsDescendants = true
+            Module.ClipsDescendants = false
             Module.BorderColor3 = Color3.fromRGB(0, 0, 0)
             Module.BackgroundTransparency = 0.42
             Module.Position = UDim2.new(0.004115226212888956, 0, 0, 0)
