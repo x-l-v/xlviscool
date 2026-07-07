@@ -1445,13 +1445,13 @@ self.set_background_image = self.SetBackgroundMedia
 
     function self:change_visiblity(state: boolean)
         if state then
-            TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                Size = UDim2.fromOffset(620, 400)
-            }):Play()
+            Container.Size = UDim2.fromOffset(620, 400)
+            Container.BackgroundTransparency = 0.16
+            Container.Visible = true
         else
-            TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                Size = UDim2.fromOffset(104.5, 52)
-            }):Play()
+            Container.Size = UDim2.fromOffset(104, 52)
+            Container.BackgroundTransparency = 0.95
+            Container.Visible = true
         end
     end
     
