@@ -18,7 +18,7 @@ getgenv().GG = {
     }
 }
 
-local UIName = "Hyperion"
+local UIName = "Frostware"
 local ConfigFolder = UIName
 local AccentToggle = false
 local AccentColor = Color3.fromRGB(255, 120, 180)
@@ -65,10 +65,10 @@ local CoreGui = cloneref(game:GetService('CoreGui'))
 local Debris = cloneref(game:GetService('Debris'))
 
 local mouse = Players.LocalPlayer:GetMouse()
-local old_Hyperion = CoreGui:FindFirstChild(UIName)
+local old_Frostware = CoreGui:FindFirstChild(UIName)
 
-if old_Hyperion then
-    Debris:AddItem(old_Hyperion, 0)
+if old_Frostware then
+    Debris:AddItem(old_Frostware, 0)
 end
 
 if not isfolder(ConfigFolder) then
@@ -769,17 +769,17 @@ function Library:remove_table_value(__table: any, table_value: string)
 end
 
 function Library:create_ui()
-    local old_Hyperion = CoreGui:FindFirstChild(UIName)
+    local old_Frostware = CoreGui:FindFirstChild(UIName)
 
-    if old_Hyperion then
-        Debris:AddItem(old_Hyperion, 0)
+    if old_Frostware then
+        Debris:AddItem(old_Frostware, 0)
     end
 
-local Hyperion = Instance.new('ScreenGui')
-Hyperion.ResetOnSpawn = false
-Hyperion.Name = UIName
-Hyperion.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-Hyperion.Parent = CoreGui
+    local Frostware = Instance.new('ScreenGui')
+    Frostware.ResetOnSpawn = false
+    Frostware.Name = UIName
+    Frostware.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    Frostware.Parent = CoreGui
     
     local Container = Instance.new('Frame')
     Container.ClipsDescendants = true
@@ -792,7 +792,7 @@ Hyperion.Parent = CoreGui
     Container.Size = UDim2.new(0, 0, 0, 0)
     Container.Active = true
     Container.BorderSizePixel = 0
-    Container.Parent = Hyperion
+    Container.Parent = Frostware
 
     local ContainerGradient = Instance.new("UIGradient")
     ContainerGradient.Color = ColorSequence.new{
@@ -1382,7 +1382,7 @@ self.set_background_image = self.SetBackgroundMedia
     local UIScale = Instance.new('UIScale')
     UIScale.Parent = Container    
     
-    self._ui = Hyperion
+    self._ui = Frostware
     self._background_media_holder = BackgroundMediaHolder
 
     local function on_drag(input: InputObject, process: boolean)
@@ -1440,7 +1440,7 @@ self.set_background_image = self.SetBackgroundMedia
     end;
 
     function self:UIVisiblity()
-        Hyperion.Enabled = not Hyperion.Enabled;
+        Frostware.Enabled = not Frostware.Enabled;
     end;
 
     function self:change_visiblity(state: boolean)
@@ -1459,7 +1459,7 @@ self.set_background_image = self.SetBackgroundMedia
     function self:load()
         local content = {}
     
-        for _, object in Hyperion:GetDescendants() do
+        for _, object in Frostware:GetDescendants() do
             if not object:IsA('ImageLabel') then
                 continue
             end
@@ -2082,7 +2082,7 @@ end
                 if Options and Options.Parent then
                     local contentHeight = self:_measure_content()
                     if contentHeight > 8 then
-                        self._size = contentHeight
+                        self._size = math.max(self._size, contentHeight)
                         Options.Size = UDim2.fromOffset(218, self._size)
                         if self._state then
                             Module.Size = UDim2.fromOffset(218, 93 + self._size + self._multiplier)
@@ -3308,6 +3308,8 @@ end
 
                         CurrentDropSizeState = 0;
 
+                        ModuleManager:refresh_size()
+
                         TweenService:Create(Module, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                             Size = UDim2.fromOffset(218, 93 + ModuleManager._size + ModuleManager._multiplier)
                         }):Play()
@@ -3327,10 +3329,6 @@ end
                         TweenService:Create(Arrow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                             Rotation = 0
                         }):Play()
-
-                        task.delay(0.55, function()
-                            ModuleManager:refresh_size()
-                        end)
                     end
                 end
 
@@ -3611,8 +3609,7 @@ end
     local lastShiftToggle = 0
     Connections['library_visiblity'] = UserInputService.InputBegan:Connect(function(input: InputObject, process: boolean)
         -- Use RightShift to toggle UI and ignore toggle if a color picker is open
-        local uiToggleKey = _G.UIKey or Enum.KeyCode.RightShift
-        if input.KeyCode ~= uiToggleKey then
+        if input.KeyCode ~= Enum.KeyCode.RightShift then
             return
         end
         -- if color picker open globally, don't toggle UI
