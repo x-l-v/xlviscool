@@ -1347,7 +1347,38 @@ self.set_background_image = self.SetBackgroundMedia
     SearchIcon.ImageTransparency = 0.1
     SearchIcon.ScaleType = Enum.ScaleType.Fit
     SearchIcon.Parent = Handler
-    
+
+    local SearchBox = Instance.new('TextBox')
+    SearchBox.Name = 'SearchBox'
+    SearchBox.BackgroundTransparency = 0
+    SearchBox.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+    SearchBox.Position = UDim2.new(0, 8, 0, 12)
+    SearchBox.Size = UDim2.new(1, -50, 0, 28)
+    SearchBox.Font = Enum.Font.GothamSemibold
+    SearchBox.Text = ''
+    SearchBox.PlaceholderText = 'Search modules...'
+    SearchBox.TextColor3 = Color3.fromRGB(200, 200, 200)
+    SearchBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+    SearchBox.TextSize = 14
+    SearchBox.TextXAlignment = Enum.TextXAlignment.Left
+    SearchBox.ClearTextOnFocus = false
+    SearchBox.Visible = false
+    SearchBox.Parent = Handler
+
+    local SearchBoxCorner = Instance.new('UICorner')
+    SearchBoxCorner.CornerRadius = UDim.new(0, 6)
+    SearchBoxCorner.Parent = SearchBox
+
+    local searchOpen = false
+    SearchIcon.InputBegan:Connect(function(input: InputObject)
+        if input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
+        searchOpen = not searchOpen
+        SearchBox.Visible = searchOpen
+        if searchOpen then
+            SearchBox:CaptureFocus()
+        end
+    end)
+
     local UIScale = Instance.new('UIScale')
     UIScale.Parent = Container    
     
@@ -1958,6 +1989,7 @@ end
             Keybind.Size = UDim2.new(0, 33, 0, 15)
             Keybind.BorderSizePixel = 0
             Keybind.BackgroundColor3 = UIAccentColor
+            Keybind.Visible = _G.Mobile ~= true
             Keybind.Parent = Header
             
             local UICorner = Instance.new('UICorner')
@@ -2522,6 +2554,7 @@ end
                 KeybindBox.AnchorPoint = Vector2.new(0, 0.5)
                 KeybindBox.BackgroundColor3 = UIAccentColor
                 KeybindBox.BorderSizePixel = 0
+                KeybindBox.Visible = _G.Mobile ~= true
                 KeybindBox.Parent = Checkbox
             
                 local KeybindCorner = Instance.new("UICorner")
@@ -3575,10 +3608,21 @@ end
         return TabManager
     end
 
+    local lastShiftToggle = 0
     Connections['library_visiblity'] = UserInputService.InputBegan:Connect(function(input: InputObject, process: boolean)
-        if input.KeyCode ~= Enum.KeyCode.Insert then
+        -- Use RightShift to toggle UI and ignore toggle if a color picker is open
+        if input.KeyCode ~= (_G.UIKey or Enum.KeyCode.RightShift) then
             return
         end
+        -- if color picker open globally, don't toggle UI
+        if pcall(function() return getgenv().HyperionColorPickerOpen == true end) then
+            if getgenv().HyperionColorPickerOpen == true then
+                return
+            end
+        end
+        local now = tick()
+        if now - lastShiftToggle < 0.3 then return end
+        lastShiftToggle = now
 
         self._ui_open = not self._ui_open
         self:change_visiblity(self._ui_open)
@@ -3593,5 +3637,3 @@ end
 end
 
 return Library
-      
-       
