@@ -1370,7 +1370,7 @@ self.set_background_image = self.SetBackgroundMedia
     SearchBoxCorner.Parent = SearchBox
 
     local searchOpen = false
-    SearchIcon.InputBegan:Connect(function(input: InputObject)
+    Connections['search_icon'] = SearchIcon.InputBegan:Connect(function(input: InputObject)
         if input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
         searchOpen = not searchOpen
         SearchBox.Visible = searchOpen
@@ -3610,8 +3610,7 @@ end
 
     local lastShiftToggle = 0
     Connections['library_visiblity'] = UserInputService.InputBegan:Connect(function(input: InputObject, process: boolean)
-        -- Use RightShift to toggle UI and ignore toggle if a color picker is open
-        if input.KeyCode ~= (_G.UIKey or Enum.KeyCode.RightShift) then
+        if input.KeyCode ~= _G.UIKey then
             return
         end
         -- if color picker open globally, don't toggle UI
@@ -3628,7 +3627,7 @@ end
         self:change_visiblity(self._ui_open)
     end)
 
-    self._ui.Container.Handler.Minimize.MouseButton1Click:Connect(function()
+    Connections['minimize_click'] = self._ui.Container.Handler.Minimize.MouseButton1Click:Connect(function()
         self._ui_open = not self._ui_open
         self:change_visiblity(self._ui_open)
     end)
