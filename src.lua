@@ -1710,11 +1710,7 @@ function TabManager:moduleparagraph(settings: any)
         _multiplier = 0
     }
 
-    if settings.section == 'right' then
-        settings.section = RightSection
-    else
-        settings.section = LeftSection
-    end
+    local section = (settings.section == 'right') and RightSection or LeftSection
 
     local Module = Instance.new('Frame')
     Module.ClipsDescendants = true
@@ -1725,7 +1721,7 @@ function TabManager:moduleparagraph(settings: any)
     Module.Size = UDim2.new(0, 218, 0, 70)
     Module.BorderSizePixel = 0
     Module.BackgroundColor3 = Color3.fromRGB(10, 10, 12)
-    Module.Parent = settings.section
+    Module.Parent = section
 
     local UIListLayout = Instance.new('UIListLayout')
     UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -1798,11 +1794,7 @@ end
 
 function TabManager:create_image(settings: any)
 
-    if settings.section == 'right' then
-        settings.section = RightSection
-    else
-        settings.section = LeftSection
-    end
+    local section = (settings.section == 'right') and RightSection or LeftSection
 
     local Module = Instance.new('Frame')
     Module.ClipsDescendants = true
@@ -1813,7 +1805,7 @@ function TabManager:create_image(settings: any)
     Module.Size = UDim2.new(0, 218, 0, 140) 
     Module.BorderSizePixel = 0
     Module.BackgroundColor3 = Color3.fromRGB(10, 10, 12)
-    Module.Parent = settings.section
+    Module.Parent = section
 
     local UICorner = Instance.new('UICorner')
     UICorner.CornerRadius = UDim.new(0, 8)
@@ -1850,11 +1842,7 @@ end
                 _multiplier = 0
             }
 
-            if settings.section == 'right' then
-                settings.section = RightSection
-            else
-                settings.section = LeftSection
-            end
+    local section = (settings.section == 'right') and RightSection or LeftSection
 
             local Module = Instance.new('Frame')
             Module.ClipsDescendants = true
@@ -1865,7 +1853,7 @@ end
             Module.Size = UDim2.new(0, 218, 0, 93)
             Module.BorderSizePixel = 0
             Module.BackgroundColor3 = Color3.fromRGB(10, 10, 12)
-            Module.Parent = settings.section
+            Module.Parent = section
 
             local UIListLayout = Instance.new('UIListLayout')
             UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -1919,7 +1907,7 @@ end
                 ModuleName.Text = settings.title or "Skibidi"
             else
                 ModuleName.RichText = true
-                ModuleName.Text = settings.richtext or "<font color='rgb(255,0,0)'>" .. UIName .. "</font> user"
+                ModuleName.Text = settings.richtext or settings.title or "<font color='rgb(255,0,0)'>" .. UIName .. "</font> user"
             end;
             ModuleName.Name = 'ModuleName'
             ModuleName.Size = UDim2.new(0, 184, 0, 13)
@@ -2318,9 +2306,9 @@ end
                     Body.Text = settings.text or "Skibidi"
                 else
                     Body.RichText = true
-                    Body.Text = settings.richtext or "<font color='rgb(255,0,0)'>" .. UIName .. "</font> user"
+                    Body.Text = settings.richtext or settings.text or "<font color='rgb(255,0,0)'>" .. UIName .. "</font> user"
                 end
-                
+
                 Body.Size = UDim2.new(1, -10, 0, 20)
                 Body.Position = UDim2.new(0, 5, 0, 30)
                 Body.BackgroundTransparency = 1
@@ -2388,7 +2376,7 @@ end
                     Body.Text = settings.text or "Skibidi" -- Default text
                 else
                     Body.RichText = true
-                    Body.Text = settings.richtext or "<font color='rgb(255,0,0)'>" .. UIName .. "</font> user" -- Default rich text
+                    Body.Text = settings.richtext or settings.text or "<font color='rgb(255,0,0)'>" .. UIName .. "</font> user" -- Default rich text
                 end
             
                 Body.Size = UDim2.new(1, -10, 1, 0)
@@ -2419,7 +2407,7 @@ end
                         Body.Text = new_settings.text or "Skibidi" -- Default text
                     else
                         Body.RichText = true
-                        Body.Text = new_settings.richtext or "<font color='rgb(255,0,0)'>" .. UIName .. "</font> user" -- Default rich text
+                        Body.Text = new_settings.richtext or new_settings.text or "<font color='rgb(255,0,0)'>" .. UIName .. "</font> user" -- Default rich text
                     end
                 end;
             
